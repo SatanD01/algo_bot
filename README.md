@@ -82,6 +82,7 @@ python visualization.py
 ```
 📦 algo_trading_bot
  ┣ 📂 logs/                  # Логи работы бота
+ ┣ 📂 libs/                  # Документации и информация о боте
  ┣ 📂 backtest_results/       # Графики и отчёты
  ┣ 📜 main.py                 # Основной файл запуска
  ┣ 📜 backtest.py             # Бэктестирование
@@ -108,8 +109,8 @@ python visualization.py
 
 ## 📌 Контакты и поддержка
 Если у вас есть вопросы или предложения, создайте **Issue** в GitHub или напишите в Telegram.  
-📩 Email: support@tradingbot.com  
-📢 Telegram: [@tradingbot_support](https://t.me/tradingbot_support)  
+📩 Email: dostonefx@gmail.com  
+📢 Telegram: [@stnD01](https://t.me/stnD01)  
 
 ---
 
