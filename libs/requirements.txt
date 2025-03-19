@@ -1,0 +1,10 @@
+MetaTrader5
+pandas
+numpy
+matplotlib
+plotly
+dash
+dash-bootstrap-components
+PyQt5
+pyqtgraph
+tqdm

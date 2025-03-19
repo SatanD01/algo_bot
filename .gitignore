@@ -26,7 +26,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 *.csv
-*.txt
+bot_logs.txt
 data_cache/
 logs/
 backtest_results/
