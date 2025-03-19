@@ -628,6 +628,7 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
     take_profits (DataFrame): Данные о тейк-профитах
     current_time (datetime, optional): Текущее время для отображения
     theme (str): Тема оформления ('white' или 'dark')
+    autoscale (bool): Автоматически масштабировать ось Y
     
     Возвращает:
     go.Figure: Объект графика Plotly
@@ -639,9 +640,17 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
         
         # Определяем видимый диапазон дат
         if current_time is None:
+            # Если current_time не указано (режим "Показать все сделки"),
+            # показываем весь диапазон данных
             visible_range = [price_data['time'].min(), price_data['time'].max()]
+            
+            # В режиме "Показать все сделки" используем все данные без фильтрации по времени
+            entries_in_range = entries
+            exits_in_range = exits
+            sl_in_range = stop_losses
+            tp_in_range = take_profits
         else:
-            # Показываем данные вокруг текущего времени
+            # Показываем данные вокруг текущего времени (пошаговый режим)
             # Убедимся, что current_time - объект datetime
             if not isinstance(current_time, (datetime, pd.Timestamp)):
                 try:
@@ -668,6 +677,27 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
             except Exception as e:
                 logger.warning(f"Ошибка при определении видимого диапазона: {e}")
                 visible_range = [price_data['time'].min(), price_data['time'].max()]
+            
+            # В пошаговом режиме фильтруем данные по текущему времени
+            if entries is not None and not entries.empty:
+                entries_in_range = entries[entries['time'] <= current_time]
+            else:
+                entries_in_range = entries
+                
+            if exits is not None and not exits.empty:
+                exits_in_range = exits[exits['time'] <= current_time]
+            else:
+                exits_in_range = exits
+            
+            if stop_losses is not None and not stop_losses.empty:
+                sl_in_range = stop_losses[stop_losses['time'] <= current_time]
+            else:
+                sl_in_range = stop_losses
+                
+            if take_profits is not None and not take_profits.empty:
+                tp_in_range = take_profits[take_profits['time'] <= current_time]
+            else:
+                tp_in_range = take_profits
         
         # Создаем свечной график
         fig = go.Figure()
@@ -685,7 +715,7 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
             )
         )
         
-        # Добавляем вертикальную линию для текущего времени, если указано
+        # Добавляем вертикальную линию для текущего времени, только если указано current_time
         if current_time is not None:
             # Вместо использования add_vline, используем add_shape для создания линии
             # с явным форматированием временной метки
@@ -714,14 +744,16 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
                 borderwidth=1
             )
         
+        # Дополнительно фильтруем данные по видимому диапазону для отображения на графике
         # Добавляем отметки для входов
-        if entries is not None and not entries.empty:
+        if entries_in_range is not None and not entries_in_range.empty:
             # Фильтруем по видимому диапазону
-            entries_in_range = entries[(entries['time'] >= visible_range[0]) & (entries['time'] <= visible_range[1])]
+            entries_filtered = entries_in_range[(entries_in_range['time'] >= visible_range[0]) & 
+                                                (entries_in_range['time'] <= visible_range[1])]
             
             # Группируем по типу ордера
-            buy_entries = entries_in_range[entries_in_range['order'] == 'buy']
-            sell_entries = entries_in_range[entries_in_range['order'] == 'sell']
+            buy_entries = entries_filtered[entries_filtered['order'] == 'buy']
+            sell_entries = entries_filtered[entries_filtered['order'] == 'sell']
             
             if not buy_entries.empty:
                 fig.add_trace(
@@ -760,14 +792,15 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
                 )
         
         # Добавляем отметки для выходов
-        if exits is not None and not exits.empty:
+        if exits_in_range is not None and not exits_in_range.empty:
             # Фильтруем по видимому диапазону
-            exits_in_range = exits[(exits['time'] >= visible_range[0]) & (exits['time'] <= visible_range[1])]
+            exits_filtered = exits_in_range[(exits_in_range['time'] >= visible_range[0]) & 
+                                           (exits_in_range['time'] <= visible_range[1])]
             
             # Группируем по типу выхода
-            tp_exits = exits_in_range[exits_in_range['type'] == 'take_profit']
-            sl_exits = exits_in_range[exits_in_range['type'] == 'stop_loss']
-            other_exits = exits_in_range[~exits_in_range['type'].isin(['take_profit', 'stop_loss'])]
+            tp_exits = exits_filtered[exits_filtered['type'] == 'take_profit']
+            sl_exits = exits_filtered[exits_filtered['type'] == 'stop_loss']
+            other_exits = exits_filtered[~exits_filtered['type'].isin(['take_profit', 'stop_loss'])]
             
             if not tp_exits.empty:
                 fig.add_trace(
@@ -824,11 +857,12 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
                 )
         
         # Добавляем линии для стоп-лоссов и тейк-профитов активных сделок
-        if entries is not None and not entries.empty and stop_losses is not None and not stop_losses.empty:
+        if entries_in_range is not None and not entries_in_range.empty and sl_in_range is not None and not sl_in_range.empty:
             # Фильтруем стоп-лоссы по видимому диапазону
-            sl_in_range = stop_losses[(stop_losses['time'] >= visible_range[0]) & (stop_losses['time'] <= visible_range[1])]
+            sl_filtered = sl_in_range[(sl_in_range['time'] >= visible_range[0]) & 
+                                     (sl_in_range['time'] <= visible_range[1])]
             
-            for _, sl in sl_in_range.iterrows():
+            for _, sl in sl_filtered.iterrows():
                 # Находим соответствующий вход
                 entry_time = sl['time']
                 
@@ -859,11 +893,12 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
                     xanchor="center"
                 )
         
-        if entries is not None and not entries.empty and take_profits is not None and not take_profits.empty:
+        if entries_in_range is not None and not entries_in_range.empty and tp_in_range is not None and not tp_in_range.empty:
             # Фильтруем тейк-профиты по видимому диапазону
-            tp_in_range = take_profits[(take_profits['time'] >= visible_range[0]) & (take_profits['time'] <= visible_range[1])]
+            tp_filtered = tp_in_range[(tp_in_range['time'] >= visible_range[0]) & 
+                                     (tp_in_range['time'] <= visible_range[1])]
             
-            for _, tp in tp_in_range.iterrows():
+            for _, tp in tp_filtered.iterrows():
                 # Находим соответствующий вход
                 entry_time = tp['time']
                 
@@ -912,9 +947,14 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
                 elif time_diff == 86400:  # 1 день
                     timeframe = "D1"
         
+        # Заголовок графика зависит от режима просмотра
+        title_text = f'График {symbol} ({timeframe})'
+        if current_time is None:
+            title_text += ' - Все сделки'
+        
         # Настраиваем макет
         fig.update_layout(
-            title=f'График {symbol} ({timeframe})',
+            title=title_text,
             xaxis_title='Время',
             yaxis_title='Цена',
             xaxis_rangeslider_visible=False,
@@ -1600,6 +1640,29 @@ def create_realtime_visualizer(results=None, entries=None, exits=None, stop_loss
                         ]),
                     ], className="mb-4"),
                     
+
+                    # Переключатель режима отображения
+                    dbc.Card([
+                        dbc.CardHeader("Режим отображения"),
+                        dbc.CardBody([
+                            dbc.RadioItems(
+                                id="display-mode",
+                                options=[
+                                    {"label": "Пошаговый просмотр", "value": "step-by-step"},
+                                    {"label": "Показать все сделки", "value": "show-all"},
+                                ],
+                                value="step-by-step",
+                                inline=True,
+                                className="mb-2"
+                            ),
+                            html.Button(
+                                "Обновить график", 
+                                id="refresh-chart-button", 
+                                className="btn btn-primary"
+                            )
+                        ]),
+                    ], className="mb-4"),
+                    
                     # График цены
                     dbc.Card([
                         dbc.CardHeader("График цены"),
@@ -1641,11 +1704,13 @@ def create_realtime_visualizer(results=None, entries=None, exits=None, stop_loss
             Output("balance-display", "children")],
             [Input("playback-interval", "n_intervals"),
             Input("step-button", "n_clicks"),
-            Input("timeframe-dropdown", "value")],
+            Input("timeframe-dropdown", "value"),
+            Input("display-mode", "value"),     # Добавляем новый Input для режима отображения
+            Input("refresh-chart-button", "n_clicks")],  # Добавляем кнопку обновления
             [State("playback-state", "data"),
             State("global-data-store", "data")],
         )
-        def update_charts(n_intervals, step_clicks, selected_timeframe, playback_state, stored_data):
+        def update_charts(n_intervals, step_clicks, selected_timeframe, display_mode, refresh_clicks, playback_state, stored_data):
             ctx = dash.callback_context
             trigger = ctx.triggered[0]['prop_id'] if ctx.triggered else ""
             
@@ -1672,18 +1737,28 @@ def create_realtime_visualizer(results=None, entries=None, exits=None, stop_loss
             if not timeline:
                 return go.Figure(), go.Figure(), "Нет данных", "Текущее время: -", "Баланс: -"
             
-            # Определяем текущий индекс и время
-            current_index = playback_state.get('current_index', 0) if playback_state else 0
-            
-            # Если был нажат кнопка Step, увеличиваем индекс
-            if trigger == "step-button.n_clicks" and step_clicks > 0:
-                current_index += 1
-            
-            # Проверяем границы
-            if current_index >= len(timeline):
+            # Логика зависит от выбранного режима отображения
+            if display_mode == "show-all":
+                # В режиме "Показать все сделки" устанавливаем текущее время на конец периода
+                current_time = timeline[-1]
                 current_index = len(timeline) - 1
+                # Обновляем баланс до последнего значения
+                if not global_data['results'].empty and 'balance' in global_data['results'].columns:
+                    global_data['balance'] = global_data['results']['balance'].iloc[-1]
+            else:
+                # В режиме пошагового просмотра используем обычную логику
+                current_index = playback_state.get('current_index', 0) if playback_state else 0
+                
+                # Если был нажат кнопка Step, увеличиваем индекс
+                if trigger == "step-button.n_clicks" and step_clicks > 0:
+                    current_index += 1
+                
+                # Проверяем границы
+                if current_index >= len(timeline):
+                    current_index = len(timeline) - 1
+                
+                current_time = timeline[current_index]
             
-            current_time = timeline[current_index]
             global_data['current_time'] = current_time
             
             # Обновляем баланс на основе завершенных сделок
@@ -1698,15 +1773,28 @@ def create_realtime_visualizer(results=None, entries=None, exits=None, stop_loss
                     global_data['balance'] = completed_trades['balance'].iloc[-1]
             
             # Создаем график цены
-            price_chart = create_price_chart(
-                global_data['timeframe_data'].get(global_data['current_timeframe']),
-                global_data['entries'],
-                global_data['exits'],
-                global_data['stop_losses'],
-                global_data['take_profits'],
-                current_time,
-                autoscale=True  # Всегда включаем автомасштабирование
-            )
+            if display_mode == "show-all":
+                # В режиме "Показать все сделки" не передаем current_time, чтобы показать весь диапазон
+                price_chart = create_price_chart(
+                    global_data['timeframe_data'].get(global_data['current_timeframe']),
+                    global_data['entries'],
+                    global_data['exits'],
+                    global_data['stop_losses'],
+                    global_data['take_profits'],
+                    None,  # Не указываем current_time
+                    autoscale=True
+                )
+            else:
+                # В обычном режиме пошагового просмотра
+                price_chart = create_price_chart(
+                    global_data['timeframe_data'].get(global_data['current_timeframe']),
+                    global_data['entries'],
+                    global_data['exits'],
+                    global_data['stop_losses'],
+                    global_data['take_profits'],
+                    current_time,
+                    autoscale=True
+                )
             
             # Если нет графика цены, создаем пустой график
             if price_chart is None:
