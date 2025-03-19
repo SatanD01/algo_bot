@@ -1,0 +1,729 @@
+2025-03-19 12:03:59 [INFO] __main__: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 12:03:59 [INFO] __main__: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59
+2025-03-19 12:03:59 [INFO] __main__: Найден файл результатов: backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:03:59 [INFO] __main__: Файл скопирован: backtest_results_EURUSD_20250319_112446.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:03:59 [INFO] __main__: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\backtest_entries_EURUSD.csv
+2025-03-19 12:03:59 [INFO] __main__: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\backtest_exits_EURUSD.csv
+2025-03-19 12:03:59 [INFO] __main__: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\backtest_sl_EURUSD.csv
+2025-03-19 12:03:59 [INFO] __main__: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\backtest_tp_EURUSD.csv
+2025-03-19 12:03:59 [INFO] __main__: Загрузка данных бэктеста...
+2025-03-19 12:03:59 [INFO] __main__: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:03:59 [INFO] __main__: Загружено 93 записей результатов бэктеста.
+2025-03-19 12:03:59 [INFO] __main__: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 12:03:59 [INFO] __main__: Загрузка ценовых данных для EURUSD...
+2025-03-19 12:03:59 [INFO] __main__: Загружено 30661 свечей для M5
+2025-03-19 12:03:59 [INFO] __main__: Загружено 10222 свечей для M15
+2025-03-19 12:03:59 [INFO] __main__: Загружено 2558 свечей для H1
+2025-03-19 12:03:59 [INFO] __main__: Создание графиков и отчетов...
+2025-03-19 12:03:59 [INFO] __main__: Преобразование столбца exit_time из типа object в datetime
+2025-03-19 12:03:59 [INFO] __main__: Диапазон дат для графика баланса: от 2024-10-01 16:40:00 до 2025-02-28 19:00:00
+2025-03-19 12:04:00 [INFO] __main__: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\balance_chart_EURUSD.png
+2025-03-19 12:04:00 [INFO] __main__: Построение графика баланса заняло 0.23 секунд
+2025-03-19 12:04:00 [INFO] __main__: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\drawdown_chart_EURUSD.png
+2025-03-19 12:04:00 [INFO] __main__: Построение графика просадки заняло 0.27 секунд
+2025-03-19 12:04:00 [INFO] __main__: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\trades_distribution_EURUSD.png
+2025-03-19 12:04:00 [INFO] __main__: Построение распределения сделок заняло 0.46 секунд
+2025-03-19 12:04:00 [INFO] __main__: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\setup_statistics_EURUSD.csv
+2025-03-19 12:04:01 [INFO] __main__: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 12:04:01 [INFO] __main__: Анализ профит-фактора по сетапам занял 0.55 секунд
+2025-03-19 12:04:01 [INFO] __main__: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\monthly_statistics_EURUSD.csv
+2025-03-19 12:04:01 [INFO] __main__: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\monthly_analysis_EURUSD.png
+2025-03-19 12:04:01 [INFO] __main__: Анализ по месяцам занял 0.39 секунд
+2025-03-19 12:04:01 [INFO] __main__: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data\summary_EURUSD.txt
+2025-03-19 12:04:01 [INFO] __main__: Создание файла статистики заняло 0.01 секунд
+2025-03-19 12:04:01 [INFO] __main__: Построение графиков цены с отметками сделок...
+2025-03-19 12:04:02 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 12:04:04 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 12:04:04 [INFO] __main__: Построение графика цены для M5 заняло 2.64 секунд
+2025-03-19 12:04:04 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 12:04:06 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 12:04:06 [INFO] __main__: Построение графика цены для M15 заняло 2.00 секунд
+2025-03-19 12:04:06 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 12:04:08 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 12:04:08 [INFO] __main__: Построение графика цены для H1 заняло 1.73 секунд
+2025-03-19 12:04:08 [INFO] __main__: 
+=== Визуализация завершена за 8.42 секунд! ===
+
+2025-03-19 12:04:08 [INFO] __main__: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59
+2025-03-19 12:04:08 [INFO] __main__: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\charts
+2025-03-19 12:04:08 [INFO] __main__: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-03-59\data
+2025-03-19 12:09:21 [INFO] __main__: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 12:09:21 [INFO] __main__: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21
+2025-03-19 12:09:21 [INFO] __main__: Найден файл результатов: backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:09:21 [INFO] __main__: Файл скопирован: backtest_results_EURUSD_20250319_112446.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:09:21 [INFO] __main__: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\backtest_entries_EURUSD.csv
+2025-03-19 12:09:21 [INFO] __main__: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\backtest_exits_EURUSD.csv
+2025-03-19 12:09:21 [INFO] __main__: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\backtest_sl_EURUSD.csv
+2025-03-19 12:09:21 [INFO] __main__: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\backtest_tp_EURUSD.csv
+2025-03-19 12:09:21 [INFO] __main__: Загрузка данных бэктеста...
+2025-03-19 12:09:21 [INFO] __main__: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:09:21 [WARNING] __main__: Высокое использование памяти: 80.8%. Выполняется сборка мусора.
+2025-03-19 12:09:21 [INFO] __main__: Использование памяти после сборки мусора: 80.8%
+2025-03-19 12:09:21 [ERROR] __main__: Критическое использование памяти: 80.8%
+2025-03-19 12:09:21 [INFO] __main__: Загружено 93 записей результатов бэктеста.
+2025-03-19 12:09:21 [WARNING] __main__: Высокое использование памяти: 80.8%. Выполняется сборка мусора.
+2025-03-19 12:09:21 [INFO] __main__: Использование памяти после сборки мусора: 80.8%
+2025-03-19 12:09:21 [ERROR] __main__: Критическое использование памяти: 80.8%
+2025-03-19 12:09:21 [INFO] __main__: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 12:09:21 [INFO] __main__: Загрузка ценовых данных для EURUSD...
+2025-03-19 12:09:21 [INFO] __main__: Загружено 2558 свечей для H1
+2025-03-19 12:09:21 [INFO] __main__: Загружено 30661 свечей для M5
+2025-03-19 12:09:21 [INFO] __main__: Загружено 10222 свечей для M15
+2025-03-19 12:09:21 [WARNING] __main__: Высокое использование памяти: 80.7%. Выполняется сборка мусора.
+2025-03-19 12:09:21 [INFO] __main__: Использование памяти после сборки мусора: 80.7%
+2025-03-19 12:09:21 [ERROR] __main__: Критическое использование памяти: 80.7%
+2025-03-19 12:09:21 [INFO] __main__: Создание графиков и отчетов...
+2025-03-19 12:09:21 [INFO] __main__: Преобразование столбца exit_time из типа object в datetime
+2025-03-19 12:09:21 [INFO] __main__: Диапазон дат для графика баланса: от 2024-10-01 16:40:00 до 2025-02-28 19:00:00
+2025-03-19 12:09:22 [WARNING] __main__: Не удалось применить сглаживание: 'numpy.timedelta64' object has no attribute 'total_seconds'
+2025-03-19 12:09:22 [INFO] __main__: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\balance_chart_EURUSD.png
+2025-03-19 12:09:22 [INFO] __main__: Построение графика баланса заняло 0.83 секунд
+2025-03-19 12:09:22 [INFO] __main__: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\drawdown_chart_EURUSD.png
+2025-03-19 12:09:22 [INFO] __main__: Построение графика просадки заняло 0.29 секунд
+2025-03-19 12:09:23 [INFO] __main__: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\trades_distribution_EURUSD.png
+2025-03-19 12:09:23 [INFO] __main__: Построение распределения сделок заняло 0.47 секунд
+2025-03-19 12:09:23 [INFO] __main__: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\setup_statistics_EURUSD.csv
+2025-03-19 12:09:23 [INFO] __main__: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 12:09:23 [INFO] __main__: Анализ профит-фактора по сетапам занял 0.50 секунд
+2025-03-19 12:09:23 [INFO] __main__: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\monthly_statistics_EURUSD.csv
+2025-03-19 12:09:23 [INFO] __main__: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\monthly_analysis_EURUSD.png
+2025-03-19 12:09:23 [INFO] __main__: Анализ по месяцам занял 0.38 секунд
+2025-03-19 12:09:23 [INFO] __main__: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data\summary_EURUSD.txt
+2025-03-19 12:09:23 [INFO] __main__: Создание файла статистики заняло 0.01 секунд
+2025-03-19 12:09:23 [INFO] __main__: Построение графиков цены с отметками сделок...
+2025-03-19 12:09:25 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 12:09:26 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 12:09:26 [INFO] __main__: Построение графика цены для M5 заняло 2.98 секунд
+2025-03-19 12:09:27 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 12:09:28 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 12:09:28 [INFO] __main__: Построение графика цены для M15 заняло 1.93 секунд
+2025-03-19 12:09:29 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 12:09:30 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 12:09:30 [INFO] __main__: Построение графика цены для H1 заняло 1.63 секунд
+2025-03-19 12:09:30 [INFO] __main__: 
+=== Визуализация завершена за 9.23 секунд! ===
+
+2025-03-19 12:09:30 [INFO] __main__: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21
+2025-03-19 12:09:30 [INFO] __main__: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\charts
+2025-03-19 12:09:30 [INFO] __main__: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-09-21\data
+2025-03-19 12:11:35 [INFO] __main__: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 12:11:35 [INFO] __main__: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35
+2025-03-19 12:11:35 [INFO] __main__: Найден файл результатов: backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:11:35 [INFO] __main__: Файл скопирован: backtest_results_EURUSD_20250319_112446.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:11:35 [INFO] __main__: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\backtest_entries_EURUSD.csv
+2025-03-19 12:11:35 [INFO] __main__: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\backtest_exits_EURUSD.csv
+2025-03-19 12:11:35 [INFO] __main__: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\backtest_sl_EURUSD.csv
+2025-03-19 12:11:35 [INFO] __main__: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\backtest_tp_EURUSD.csv
+2025-03-19 12:11:35 [INFO] __main__: Загрузка данных бэктеста...
+2025-03-19 12:11:35 [INFO] __main__: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:11:35 [INFO] __main__: Загружено 93 записей результатов бэктеста.
+2025-03-19 12:11:35 [INFO] __main__: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 12:11:35 [INFO] __main__: Загрузка ценовых данных для EURUSD...
+2025-03-19 12:11:35 [INFO] __main__: Загружено 2558 свечей для H1
+2025-03-19 12:11:35 [INFO] __main__: Загружено 10222 свечей для M15
+2025-03-19 12:11:35 [INFO] __main__: Загружено 30661 свечей для M5
+2025-03-19 12:11:35 [INFO] __main__: Создание графиков и отчетов...
+2025-03-19 12:11:35 [ERROR] __main__: Ошибка при построении графика баланса: float() argument must be a string or a real number, not 'list'
+2025-03-19 12:11:35 [ERROR] __main__: Traceback (most recent call last):
+  File "D:\algo_bots\visualization.py", line 478, in plot_balance_equity
+    merged_df.plot(x='date', y=['balance', 'cumulative_profit'],
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  style=['-', '--'],
+                  ^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+                  ax=plt.gca(),
+                  ^^^^^^^^^^^^^
+                  grid=True)
+                  ^^^^^^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_core.py", line 1030, in __call__
+    return plot_backend.plot(data, kind=kind, **kwargs)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_matplotlib\__init__.py", line 71, in plot
+    plot_obj.generate()
+    ~~~~~~~~~~~~~~~~~^^
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_matplotlib\core.py", line 501, in generate
+    self._make_plot(fig)
+    ~~~~~~~~~~~~~~~^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_matplotlib\core.py", line 1550, in _make_plot
+    newlines = plotf(
+        ax,
+    ...<6 lines>...
+        **kwds,
+    )
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_matplotlib\core.py", line 1607, in _ts_plot
+    lines = self._plot(ax, data.index, np.asarray(data.values), style=style, **kwds)
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_matplotlib\core.py", line 1586, in _plot
+    lines = MPLPlot._plot(ax, x, y_values, style=style, **kwds)
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_matplotlib\converter.py", line 95, in wrapper
+    return func(*args, **kwargs)
+  File "D:\algo_bots\.venv\Lib\site-packages\pandas\plotting\_matplotlib\core.py", line 981, in _plot
+    return ax.plot(*args, **kwds)
+           ~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\matplotlib\axes\_axes.py", line 1777, in plot
+    lines = [*self._get_lines(self, *args, data=data, **kwargs)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\matplotlib\axes\_base.py", line 297, in __call__
+    yield from self._plot_args(
+               ~~~~~~~~~~~~~~~^
+        axes, this, kwargs, ambiguous_fmt_datakey=ambiguous_fmt_datakey,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        return_kwargs=return_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\algo_bots\.venv\Lib\site-packages\matplotlib\axes\_base.py", line 546, in _plot_args
+    return [l[0] for l in result]
+                          ^^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\matplotlib\axes\_base.py", line 539, in <genexpr>
+    result = (make_artist(axes, x[:, j % ncx], y[:, j % ncy], kw,
+              ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          {**kwargs, 'label': label})
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\matplotlib\axes\_base.py", line 338, in _make_line
+    seg = mlines.Line2D(x, y, **kw)
+  File "D:\algo_bots\.venv\Lib\site-packages\matplotlib\lines.py", line 371, in __init__
+    self.set_linewidth(linewidth)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\algo_bots\.venv\Lib\site-packages\matplotlib\lines.py", line 1138, in set_linewidth
+    w = float(w)
+TypeError: float() argument must be a string or a real number, not 'list'
+
+2025-03-19 12:11:36 [INFO] __main__: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\drawdown_chart_EURUSD.png
+2025-03-19 12:11:36 [INFO] __main__: Построение графика просадки заняло 0.28 секунд
+2025-03-19 12:11:36 [INFO] __main__: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\trades_distribution_EURUSD.png
+2025-03-19 12:11:36 [INFO] __main__: Построение распределения сделок заняло 0.46 секунд
+2025-03-19 12:11:36 [INFO] __main__: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\setup_statistics_EURUSD.csv
+2025-03-19 12:11:37 [INFO] __main__: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 12:11:37 [INFO] __main__: Анализ профит-фактора по сетапам занял 0.52 секунд
+2025-03-19 12:11:37 [INFO] __main__: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\monthly_statistics_EURUSD.csv
+2025-03-19 12:11:37 [INFO] __main__: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\monthly_analysis_EURUSD.png
+2025-03-19 12:11:37 [INFO] __main__: Анализ по месяцам занял 0.39 секунд
+2025-03-19 12:11:37 [INFO] __main__: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data\summary_EURUSD.txt
+2025-03-19 12:11:37 [INFO] __main__: Создание файла статистики заняло 0.01 секунд
+2025-03-19 12:11:37 [INFO] __main__: Построение графиков цены с отметками сделок...
+2025-03-19 12:11:38 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 12:11:40 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 12:11:40 [INFO] __main__: Построение графика цены для M5 заняло 2.66 секунд
+2025-03-19 12:11:40 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 12:11:42 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 12:11:42 [INFO] __main__: Построение графика цены для M15 заняло 2.02 секунд
+2025-03-19 12:11:42 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 12:11:43 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 12:11:43 [INFO] __main__: Построение графика цены для H1 заняло 1.69 секунд
+2025-03-19 12:11:43 [INFO] __main__: 
+=== Визуализация завершена за 8.27 секунд! ===
+
+2025-03-19 12:11:43 [INFO] __main__: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35
+2025-03-19 12:11:43 [INFO] __main__: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\charts
+2025-03-19 12:11:43 [INFO] __main__: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-11-35\data
+2025-03-19 12:13:09 [INFO] __main__: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 12:13:09 [INFO] __main__: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09
+2025-03-19 12:13:09 [INFO] __main__: Найден файл результатов: backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:13:09 [INFO] __main__: Файл скопирован: backtest_results_EURUSD_20250319_112446.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:13:09 [INFO] __main__: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\backtest_entries_EURUSD.csv
+2025-03-19 12:13:09 [INFO] __main__: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\backtest_exits_EURUSD.csv
+2025-03-19 12:13:09 [INFO] __main__: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\backtest_sl_EURUSD.csv
+2025-03-19 12:13:09 [INFO] __main__: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\backtest_tp_EURUSD.csv
+2025-03-19 12:13:09 [INFO] __main__: Загрузка данных бэктеста...
+2025-03-19 12:13:09 [INFO] __main__: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:13:09 [WARNING] __main__: Высокое использование памяти: 83.0%. Выполняется сборка мусора.
+2025-03-19 12:13:09 [INFO] __main__: Использование памяти после сборки мусора: 83.0%
+2025-03-19 12:13:09 [ERROR] __main__: Критическое использование памяти: 83.0%
+2025-03-19 12:13:09 [INFO] __main__: Загружено 93 записей результатов бэктеста.
+2025-03-19 12:13:09 [WARNING] __main__: Высокое использование памяти: 83.0%. Выполняется сборка мусора.
+2025-03-19 12:13:09 [INFO] __main__: Использование памяти после сборки мусора: 83.0%
+2025-03-19 12:13:09 [ERROR] __main__: Критическое использование памяти: 83.0%
+2025-03-19 12:13:09 [INFO] __main__: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 12:13:09 [INFO] __main__: Загрузка ценовых данных для EURUSD...
+2025-03-19 12:13:09 [INFO] __main__: Загружено 30661 свечей для M5
+2025-03-19 12:13:09 [INFO] __main__: Загружено 2558 свечей для H1
+2025-03-19 12:13:09 [INFO] __main__: Загружено 10222 свечей для M15
+2025-03-19 12:13:09 [WARNING] __main__: Высокое использование памяти: 83.1%. Выполняется сборка мусора.
+2025-03-19 12:13:09 [INFO] __main__: Использование памяти после сборки мусора: 83.1%
+2025-03-19 12:13:09 [ERROR] __main__: Критическое использование памяти: 83.1%
+2025-03-19 12:13:09 [INFO] __main__: Создание графиков и отчетов...
+2025-03-19 12:13:09 [ERROR] __main__: Ошибка при построении графика баланса: module 'matplotlib.dates' has no attribute 'MaxNLocator'
+2025-03-19 12:13:09 [ERROR] __main__: Traceback (most recent call last):
+  File "D:\algo_bots\visualization.py", line 526, in plot_balance_equity
+    ax.xaxis.set_major_locator(mdates.MaxNLocator(num_ticks))
+                               ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'matplotlib.dates' has no attribute 'MaxNLocator'. Did you mean: 'DateLocator'?
+
+2025-03-19 12:13:09 [INFO] __main__: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\drawdown_chart_EURUSD.png
+2025-03-19 12:13:09 [INFO] __main__: Построение графика просадки заняло 0.34 секунд
+2025-03-19 12:13:10 [INFO] __main__: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\trades_distribution_EURUSD.png
+2025-03-19 12:13:10 [INFO] __main__: Построение распределения сделок заняло 0.47 секунд
+2025-03-19 12:13:10 [INFO] __main__: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\setup_statistics_EURUSD.csv
+2025-03-19 12:13:10 [INFO] __main__: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 12:13:10 [INFO] __main__: Анализ профит-фактора по сетапам занял 0.53 секунд
+2025-03-19 12:13:10 [INFO] __main__: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\monthly_statistics_EURUSD.csv
+2025-03-19 12:13:11 [INFO] __main__: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\monthly_analysis_EURUSD.png
+2025-03-19 12:13:11 [INFO] __main__: Анализ по месяцам занял 0.49 секунд
+2025-03-19 12:13:11 [INFO] __main__: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data\summary_EURUSD.txt
+2025-03-19 12:13:11 [INFO] __main__: Создание файла статистики заняло 0.01 секунд
+2025-03-19 12:13:11 [INFO] __main__: Построение графиков цены с отметками сделок...
+2025-03-19 12:13:12 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 12:13:13 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 12:13:13 [INFO] __main__: Построение графика цены для M5 заняло 2.68 секунд
+2025-03-19 12:13:14 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 12:13:15 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 12:13:15 [INFO] __main__: Построение графика цены для M15 заняло 2.04 секунд
+2025-03-19 12:13:16 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 12:13:17 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 12:13:17 [INFO] __main__: Построение графика цены для H1 заняло 1.70 секунд
+2025-03-19 12:13:17 [INFO] __main__: 
+=== Визуализация завершена за 8.54 секунд! ===
+
+2025-03-19 12:13:17 [INFO] __main__: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09
+2025-03-19 12:13:17 [INFO] __main__: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\charts
+2025-03-19 12:13:17 [INFO] __main__: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-13-09\data
+2025-03-19 12:15:31 [INFO] __main__: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 12:15:31 [INFO] __main__: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31
+2025-03-19 12:15:31 [INFO] __main__: Найден файл результатов: backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:15:31 [INFO] __main__: Файл скопирован: backtest_results_EURUSD_20250319_112446.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:15:31 [INFO] __main__: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\backtest_entries_EURUSD.csv
+2025-03-19 12:15:31 [INFO] __main__: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\backtest_exits_EURUSD.csv
+2025-03-19 12:15:31 [INFO] __main__: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\backtest_sl_EURUSD.csv
+2025-03-19 12:15:31 [INFO] __main__: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\backtest_tp_EURUSD.csv
+2025-03-19 12:15:31 [INFO] __main__: Загрузка данных бэктеста...
+2025-03-19 12:15:31 [INFO] __main__: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:15:31 [INFO] __main__: Загружено 93 записей результатов бэктеста.
+2025-03-19 12:15:31 [INFO] __main__: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 12:15:31 [INFO] __main__: Загрузка ценовых данных для EURUSD...
+2025-03-19 12:15:31 [INFO] __main__: Загружено 2558 свечей для H1
+2025-03-19 12:15:31 [INFO] __main__: Загружено 30661 свечей для M5
+2025-03-19 12:15:31 [INFO] __main__: Загружено 10222 свечей для M15
+2025-03-19 12:15:31 [INFO] __main__: Создание графиков и отчетов...
+2025-03-19 12:15:31 [ERROR] __main__: Ошибка при построении графика баланса: module 'matplotlib.dates' has no attribute 'MaxNLocator'
+2025-03-19 12:15:31 [ERROR] __main__: Traceback (most recent call last):
+  File "D:\algo_bots\visualization.py", line 526, in plot_balance_equity
+    ax.xaxis.set_major_locator(mdates.MaxNLocator(num_ticks))
+                               ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'matplotlib.dates' has no attribute 'MaxNLocator'. Did you mean: 'DateLocator'?
+
+2025-03-19 12:15:32 [INFO] __main__: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\drawdown_chart_EURUSD.png
+2025-03-19 12:15:32 [INFO] __main__: Построение графика просадки заняло 0.28 секунд
+2025-03-19 12:15:32 [INFO] __main__: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\trades_distribution_EURUSD.png
+2025-03-19 12:15:32 [INFO] __main__: Построение распределения сделок заняло 0.44 секунд
+2025-03-19 12:15:32 [INFO] __main__: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\setup_statistics_EURUSD.csv
+2025-03-19 12:15:33 [INFO] __main__: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 12:15:33 [INFO] __main__: Анализ профит-фактора по сетапам занял 0.47 секунд
+2025-03-19 12:15:33 [INFO] __main__: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\monthly_statistics_EURUSD.csv
+2025-03-19 12:15:33 [INFO] __main__: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\monthly_analysis_EURUSD.png
+2025-03-19 12:15:33 [INFO] __main__: Анализ по месяцам занял 0.37 секунд
+2025-03-19 12:15:33 [INFO] __main__: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data\summary_EURUSD.txt
+2025-03-19 12:15:33 [INFO] __main__: Создание файла статистики заняло 0.01 секунд
+2025-03-19 12:15:33 [INFO] __main__: Построение графиков цены с отметками сделок...
+2025-03-19 12:15:34 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 12:15:36 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 12:15:36 [INFO] __main__: Построение графика цены для M5 заняло 2.65 секунд
+2025-03-19 12:15:36 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 12:15:37 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 12:15:38 [INFO] __main__: Построение графика цены для M15 заняло 1.99 секунд
+2025-03-19 12:15:38 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 12:15:39 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 12:15:39 [INFO] __main__: Построение графика цены для H1 заняло 1.73 секунд
+2025-03-19 12:15:39 [INFO] __main__: 
+=== Визуализация завершена за 8.11 секунд! ===
+
+2025-03-19 12:15:39 [INFO] __main__: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31
+2025-03-19 12:15:39 [INFO] __main__: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\charts
+2025-03-19 12:15:39 [INFO] __main__: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-15-31\data
+2025-03-19 12:17:49 [INFO] __main__: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 12:17:49 [INFO] __main__: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49
+2025-03-19 12:17:49 [INFO] __main__: Найден файл результатов: backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:17:49 [INFO] __main__: Файл скопирован: backtest_results_EURUSD_20250319_112446.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:17:49 [INFO] __main__: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\backtest_entries_EURUSD.csv
+2025-03-19 12:17:49 [INFO] __main__: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\backtest_exits_EURUSD.csv
+2025-03-19 12:17:49 [INFO] __main__: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\backtest_sl_EURUSD.csv
+2025-03-19 12:17:49 [INFO] __main__: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\backtest_tp_EURUSD.csv
+2025-03-19 12:17:49 [INFO] __main__: Загрузка данных бэктеста...
+2025-03-19 12:17:49 [INFO] __main__: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:17:49 [INFO] __main__: Загружено 93 записей результатов бэктеста.
+2025-03-19 12:17:49 [INFO] __main__: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 12:17:49 [INFO] __main__: Загрузка ценовых данных для EURUSD...
+2025-03-19 12:17:49 [INFO] __main__: Загружено 2558 свечей для H1
+2025-03-19 12:17:49 [INFO] __main__: Загружено 30661 свечей для M5
+2025-03-19 12:17:49 [INFO] __main__: Загружено 10222 свечей для M15
+2025-03-19 12:17:49 [INFO] __main__: Создание графиков и отчетов...
+2025-03-19 12:17:49 [INFO] __main__: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\balance_chart_EURUSD.png
+2025-03-19 12:17:49 [INFO] __main__: Построение графика баланса заняло 0.31 секунд
+2025-03-19 12:17:49 [INFO] __main__: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\drawdown_chart_EURUSD.png
+2025-03-19 12:17:49 [INFO] __main__: Построение графика просадки заняло 0.28 секунд
+2025-03-19 12:17:50 [INFO] __main__: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\trades_distribution_EURUSD.png
+2025-03-19 12:17:50 [INFO] __main__: Построение распределения сделок заняло 0.46 секунд
+2025-03-19 12:17:50 [INFO] __main__: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\setup_statistics_EURUSD.csv
+2025-03-19 12:17:50 [INFO] __main__: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 12:17:50 [INFO] __main__: Анализ профит-фактора по сетапам занял 0.51 секунд
+2025-03-19 12:17:50 [INFO] __main__: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\monthly_statistics_EURUSD.csv
+2025-03-19 12:17:51 [INFO] __main__: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\monthly_analysis_EURUSD.png
+2025-03-19 12:17:51 [INFO] __main__: Анализ по месяцам занял 0.37 секунд
+2025-03-19 12:17:51 [INFO] __main__: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data\summary_EURUSD.txt
+2025-03-19 12:17:51 [INFO] __main__: Создание файла статистики заняло 0.01 секунд
+2025-03-19 12:17:51 [INFO] __main__: Построение графиков цены с отметками сделок...
+2025-03-19 12:17:52 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 12:17:53 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 12:17:53 [INFO] __main__: Построение графика цены для M5 заняло 2.63 секунд
+2025-03-19 12:17:54 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 12:17:55 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 12:17:55 [INFO] __main__: Построение графика цены для M15 заняло 1.97 секунд
+2025-03-19 12:17:56 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 12:17:57 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 12:17:57 [INFO] __main__: Построение графика цены для H1 заняло 1.72 секунд
+2025-03-19 12:17:57 [INFO] __main__: 
+=== Визуализация завершена за 8.43 секунд! ===
+
+2025-03-19 12:17:57 [INFO] __main__: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49
+2025-03-19 12:17:57 [INFO] __main__: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\charts
+2025-03-19 12:17:57 [INFO] __main__: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-17-49\data
+2025-03-19 12:21:25 [INFO] __main__: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 12:21:25 [INFO] __main__: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25
+2025-03-19 12:21:25 [INFO] __main__: Найден файл результатов: backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:21:25 [INFO] __main__: Файл скопирован: backtest_results_EURUSD_20250319_112446.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:21:25 [INFO] __main__: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\backtest_entries_EURUSD.csv
+2025-03-19 12:21:25 [INFO] __main__: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\backtest_exits_EURUSD.csv
+2025-03-19 12:21:25 [INFO] __main__: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\backtest_sl_EURUSD.csv
+2025-03-19 12:21:25 [INFO] __main__: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\backtest_tp_EURUSD.csv
+2025-03-19 12:21:25 [INFO] __main__: Загрузка данных бэктеста...
+2025-03-19 12:21:25 [INFO] __main__: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\backtest_results_EURUSD_20250319_112446.csv
+2025-03-19 12:21:25 [INFO] __main__: Загружено 93 записей результатов бэктеста.
+2025-03-19 12:21:25 [INFO] __main__: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 12:21:25 [INFO] __main__: Загрузка ценовых данных для EURUSD...
+2025-03-19 12:21:25 [INFO] __main__: Загружено 10222 свечей для M15
+2025-03-19 12:21:25 [INFO] __main__: Загружено 30661 свечей для M5
+2025-03-19 12:21:25 [INFO] __main__: Загружено 2558 свечей для H1
+2025-03-19 12:21:25 [INFO] __main__: Создание графиков и отчетов...
+2025-03-19 12:21:25 [INFO] __main__: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\balance_chart_EURUSD.png
+2025-03-19 12:21:25 [INFO] __main__: Построение графика баланса заняло 0.30 секунд
+2025-03-19 12:21:26 [INFO] __main__: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\drawdown_chart_EURUSD.png
+2025-03-19 12:21:26 [INFO] __main__: Построение графика просадки заняло 0.28 секунд
+2025-03-19 12:21:26 [INFO] __main__: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\trades_distribution_EURUSD.png
+2025-03-19 12:21:26 [INFO] __main__: Построение распределения сделок заняло 0.46 секунд
+2025-03-19 12:21:26 [INFO] __main__: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\setup_statistics_EURUSD.csv
+2025-03-19 12:21:27 [INFO] __main__: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 12:21:27 [INFO] __main__: Анализ профит-фактора по сетапам занял 0.53 секунд
+2025-03-19 12:21:27 [INFO] __main__: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\monthly_statistics_EURUSD.csv
+2025-03-19 12:21:27 [INFO] __main__: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\monthly_analysis_EURUSD.png
+2025-03-19 12:21:27 [INFO] __main__: Анализ по месяцам занял 0.39 секунд
+2025-03-19 12:21:27 [INFO] __main__: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data\summary_EURUSD.txt
+2025-03-19 12:21:27 [INFO] __main__: Создание файла статистики заняло 0.01 секунд
+2025-03-19 12:21:27 [INFO] __main__: Построение графиков цены с отметками сделок...
+2025-03-19 12:21:28 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 12:21:30 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 12:21:30 [INFO] __main__: Построение графика цены для M5 заняло 2.70 секунд
+2025-03-19 12:21:30 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 12:21:32 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 12:21:32 [INFO] __main__: Построение графика цены для M15 заняло 2.01 секунд
+2025-03-19 12:21:32 [INFO] __main__: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 12:21:33 [INFO] __main__: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 12:21:33 [INFO] __main__: Построение графика цены для H1 заняло 1.74 секунд
+2025-03-19 12:21:33 [INFO] __main__: 
+=== Визуализация завершена за 8.58 секунд! ===
+
+2025-03-19 12:21:33 [INFO] __main__: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25
+2025-03-19 12:21:33 [INFO] __main__: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\charts
+2025-03-19 12:21:33 [INFO] __main__: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_12-21-25\data
+2025-03-19 17:47:18 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 17:49:02 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 17:50:11 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 17:52:56 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 17:56:54 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 18:00:01 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 18:09:08 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 18:15:38 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 18:47:08 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 18:48:31 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:07:21 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:15:54 [INFO] visualization: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 19:15:54 [INFO] visualization: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54
+2025-03-19 19:15:54 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:15:54 [INFO] visualization: Файл скопирован: backtest_results_EURUSD_20250319_142117.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:15:54 [INFO] visualization: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\backtest_entries_EURUSD.csv
+2025-03-19 19:15:54 [INFO] visualization: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\backtest_exits_EURUSD.csv
+2025-03-19 19:15:54 [INFO] visualization: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\backtest_sl_EURUSD.csv
+2025-03-19 19:15:54 [INFO] visualization: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\backtest_tp_EURUSD.csv
+2025-03-19 19:15:54 [INFO] visualization: Загрузка данных бэктеста...
+2025-03-19 19:15:54 [INFO] visualization: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:15:54 [INFO] visualization: Загружено 93 записей результатов бэктеста.
+2025-03-19 19:15:54 [INFO] visualization: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 19:15:55 [INFO] visualization: Загрузка ценовых данных для EURUSD...
+2025-03-19 19:15:55 [INFO] visualization: Загружено 2558 свечей для H1
+2025-03-19 19:15:55 [INFO] visualization: Загружено 10222 свечей для M15
+2025-03-19 19:15:55 [INFO] visualization: Загружено 30661 свечей для M5
+2025-03-19 19:15:55 [INFO] visualization: Создание графиков и отчетов...
+2025-03-19 19:15:55 [INFO] visualization: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\balance_chart_EURUSD.png
+2025-03-19 19:15:55 [INFO] visualization: Построение графика баланса заняло 0.33 секунд
+2025-03-19 19:15:55 [INFO] visualization: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\drawdown_chart_EURUSD.png
+2025-03-19 19:15:55 [INFO] visualization: Построение графика просадки заняло 0.34 секунд
+2025-03-19 19:15:56 [INFO] visualization: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\trades_distribution_EURUSD.png
+2025-03-19 19:15:56 [INFO] visualization: Построение распределения сделок заняло 0.46 секунд
+2025-03-19 19:15:56 [INFO] visualization: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\setup_statistics_EURUSD.csv
+2025-03-19 19:15:56 [INFO] visualization: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 19:15:56 [INFO] visualization: Анализ профит-фактора по сетапам занял 0.50 секунд
+2025-03-19 19:15:56 [INFO] visualization: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\monthly_statistics_EURUSD.csv
+2025-03-19 19:15:57 [INFO] visualization: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\monthly_analysis_EURUSD.png
+2025-03-19 19:15:57 [INFO] visualization: Анализ по месяцам занял 0.39 секунд
+2025-03-19 19:15:57 [INFO] visualization: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data\summary_EURUSD.txt
+2025-03-19 19:15:57 [INFO] visualization: Создание файла статистики заняло 0.01 секунд
+2025-03-19 19:15:57 [INFO] visualization: Построение графиков цены с отметками сделок...
+2025-03-19 19:15:58 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 19:15:59 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 19:15:59 [INFO] visualization: Построение графика цены для M5 заняло 2.68 секунд
+2025-03-19 19:16:00 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 19:16:01 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 19:16:01 [INFO] visualization: Построение графика цены для M15 заняло 2.02 секунд
+2025-03-19 19:16:01 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 19:16:03 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 19:16:03 [INFO] visualization: Построение графика цены для H1 заняло 1.73 секунд
+2025-03-19 19:16:03 [INFO] visualization: 
+=== Визуализация завершена за 8.64 секунд! ===
+
+2025-03-19 19:16:03 [INFO] visualization: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54
+2025-03-19 19:16:03 [INFO] visualization: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\charts
+2025-03-19 19:16:03 [INFO] visualization: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-15-54\data
+2025-03-19 19:16:11 [INFO] visualization: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 19:16:11 [INFO] visualization: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11
+2025-03-19 19:16:11 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:16:11 [INFO] visualization: Файл скопирован: backtest_results_EURUSD_20250319_142117.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:16:11 [INFO] visualization: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\backtest_entries_EURUSD.csv
+2025-03-19 19:16:11 [INFO] visualization: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\backtest_exits_EURUSD.csv
+2025-03-19 19:16:11 [INFO] visualization: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\backtest_sl_EURUSD.csv
+2025-03-19 19:16:11 [INFO] visualization: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\backtest_tp_EURUSD.csv
+2025-03-19 19:16:11 [INFO] visualization: Загрузка данных бэктеста...
+2025-03-19 19:16:11 [INFO] visualization: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:16:11 [INFO] visualization: Загружено 93 записей результатов бэктеста.
+2025-03-19 19:16:11 [INFO] visualization: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 19:16:11 [INFO] visualization: Загрузка ценовых данных для EURUSD...
+2025-03-19 19:16:11 [INFO] visualization: Загружено 2558 свечей для H1
+2025-03-19 19:16:11 [INFO] visualization: Загружено 10222 свечей для M15
+2025-03-19 19:16:11 [INFO] visualization: Загружено 30661 свечей для M5
+2025-03-19 19:16:11 [INFO] visualization: Создание графиков и отчетов...
+2025-03-19 19:16:11 [INFO] visualization: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\balance_chart_EURUSD.png
+2025-03-19 19:16:11 [INFO] visualization: Построение графика баланса заняло 0.28 секунд
+2025-03-19 19:16:12 [INFO] visualization: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\drawdown_chart_EURUSD.png
+2025-03-19 19:16:12 [INFO] visualization: Построение графика просадки заняло 0.29 секунд
+2025-03-19 19:16:12 [INFO] visualization: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\trades_distribution_EURUSD.png
+2025-03-19 19:16:12 [INFO] visualization: Построение распределения сделок заняло 0.46 секунд
+2025-03-19 19:16:12 [INFO] visualization: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\setup_statistics_EURUSD.csv
+2025-03-19 19:16:13 [INFO] visualization: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 19:16:13 [INFO] visualization: Анализ профит-фактора по сетапам занял 0.48 секунд
+2025-03-19 19:16:13 [INFO] visualization: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\monthly_statistics_EURUSD.csv
+2025-03-19 19:16:13 [INFO] visualization: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\monthly_analysis_EURUSD.png
+2025-03-19 19:16:13 [INFO] visualization: Анализ по месяцам занял 0.39 секунд
+2025-03-19 19:16:13 [INFO] visualization: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data\summary_EURUSD.txt
+2025-03-19 19:16:13 [INFO] visualization: Создание файла статистики заняло 0.01 секунд
+2025-03-19 19:16:13 [INFO] visualization: Построение графиков цены с отметками сделок...
+2025-03-19 19:16:14 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 19:16:16 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 19:16:16 [INFO] visualization: Построение графика цены для M5 заняло 2.69 секунд
+2025-03-19 19:16:16 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 19:16:18 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 19:16:18 [INFO] visualization: Построение графика цены для M15 заняло 2.00 секунд
+2025-03-19 19:16:18 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 19:16:19 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 19:16:19 [INFO] visualization: Построение графика цены для H1 заняло 1.77 секунд
+2025-03-19 19:16:20 [INFO] visualization: 
+=== Визуализация завершена за 8.52 секунд! ===
+
+2025-03-19 19:16:20 [INFO] visualization: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11
+2025-03-19 19:16:20 [INFO] visualization: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\charts
+2025-03-19 19:16:20 [INFO] visualization: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-11\data
+2025-03-19 19:16:45 [INFO] visualization: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 19:16:45 [INFO] visualization: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45
+2025-03-19 19:16:45 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:16:45 [INFO] visualization: Файл скопирован: backtest_results_EURUSD_20250319_142117.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:16:45 [INFO] visualization: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\backtest_entries_EURUSD.csv
+2025-03-19 19:16:45 [INFO] visualization: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\backtest_exits_EURUSD.csv
+2025-03-19 19:16:45 [INFO] visualization: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\backtest_sl_EURUSD.csv
+2025-03-19 19:16:45 [INFO] visualization: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\backtest_tp_EURUSD.csv
+2025-03-19 19:16:45 [INFO] visualization: Загрузка данных бэктеста...
+2025-03-19 19:16:45 [INFO] visualization: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:16:45 [INFO] visualization: Загружено 93 записей результатов бэктеста.
+2025-03-19 19:16:45 [INFO] visualization: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 19:16:45 [INFO] visualization: Загрузка ценовых данных для EURUSD...
+2025-03-19 19:16:45 [INFO] visualization: Загружено 10222 свечей для M15
+2025-03-19 19:16:45 [INFO] visualization: Загружено 30661 свечей для M5
+2025-03-19 19:16:45 [INFO] visualization: Загружено 2558 свечей для H1
+2025-03-19 19:16:45 [INFO] visualization: Создание графиков и отчетов...
+2025-03-19 19:16:45 [INFO] visualization: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\balance_chart_EURUSD.png
+2025-03-19 19:16:45 [INFO] visualization: Построение графика баланса заняло 0.28 секунд
+2025-03-19 19:16:46 [INFO] visualization: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\drawdown_chart_EURUSD.png
+2025-03-19 19:16:46 [INFO] visualization: Построение графика просадки заняло 0.29 секунд
+2025-03-19 19:16:46 [INFO] visualization: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\trades_distribution_EURUSD.png
+2025-03-19 19:16:46 [INFO] visualization: Построение распределения сделок заняло 0.49 секунд
+2025-03-19 19:16:46 [INFO] visualization: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\setup_statistics_EURUSD.csv
+2025-03-19 19:16:47 [INFO] visualization: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 19:16:47 [INFO] visualization: Анализ профит-фактора по сетапам занял 0.52 секунд
+2025-03-19 19:16:47 [INFO] visualization: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\monthly_statistics_EURUSD.csv
+2025-03-19 19:16:47 [INFO] visualization: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\monthly_analysis_EURUSD.png
+2025-03-19 19:16:47 [INFO] visualization: Анализ по месяцам занял 0.41 секунд
+2025-03-19 19:16:47 [INFO] visualization: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data\summary_EURUSD.txt
+2025-03-19 19:16:47 [INFO] visualization: Создание файла статистики заняло 0.01 секунд
+2025-03-19 19:16:47 [INFO] visualization: Построение графиков цены с отметками сделок...
+2025-03-19 19:16:48 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 19:16:50 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 19:16:50 [INFO] visualization: Построение графика цены для M5 заняло 3.09 секунд
+2025-03-19 19:16:51 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 19:16:52 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 19:16:53 [INFO] visualization: Построение графика цены для M15 заняло 2.22 секунд
+2025-03-19 19:16:53 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 19:16:54 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 19:16:54 [INFO] visualization: Построение графика цены для H1 заняло 1.86 секунд
+2025-03-19 19:16:54 [INFO] visualization: 
+=== Визуализация завершена за 9.32 секунд! ===
+
+2025-03-19 19:16:54 [INFO] visualization: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45
+2025-03-19 19:16:54 [INFO] visualization: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\charts
+2025-03-19 19:16:54 [INFO] visualization: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-16-45\data
+2025-03-19 19:21:50 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:22:27 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:23:18 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:23:35 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:23:51 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:24:05 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:24:41 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:25:06 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:25:25 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:25:35 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:25:46 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:25:56 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:26:06 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:26:18 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:26:40 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:26:48 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:27:13 [INFO] visualization: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 19:27:13 [INFO] visualization: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13
+2025-03-19 19:27:13 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:27:13 [INFO] visualization: Файл скопирован: backtest_results_EURUSD_20250319_142117.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:27:13 [INFO] visualization: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\backtest_entries_EURUSD.csv
+2025-03-19 19:27:13 [INFO] visualization: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\backtest_exits_EURUSD.csv
+2025-03-19 19:27:13 [INFO] visualization: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\backtest_sl_EURUSD.csv
+2025-03-19 19:27:13 [INFO] visualization: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\backtest_tp_EURUSD.csv
+2025-03-19 19:27:13 [INFO] visualization: Загрузка данных бэктеста...
+2025-03-19 19:27:13 [INFO] visualization: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:27:13 [WARNING] visualization: Высокое использование памяти: 81.3%. Выполняется сборка мусора.
+2025-03-19 19:27:13 [INFO] visualization: Использование памяти после сборки мусора: 81.3%
+2025-03-19 19:27:13 [ERROR] visualization: Критическое использование памяти: 81.3%
+2025-03-19 19:27:13 [INFO] visualization: Загружено 93 записей результатов бэктеста.
+2025-03-19 19:27:13 [WARNING] visualization: Высокое использование памяти: 81.3%. Выполняется сборка мусора.
+2025-03-19 19:27:13 [INFO] visualization: Использование памяти после сборки мусора: 81.3%
+2025-03-19 19:27:13 [ERROR] visualization: Критическое использование памяти: 81.3%
+2025-03-19 19:27:13 [INFO] visualization: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 19:27:13 [INFO] visualization: Загрузка ценовых данных для EURUSD...
+2025-03-19 19:27:13 [INFO] visualization: Загружено 2558 свечей для H1
+2025-03-19 19:27:13 [INFO] visualization: Загружено 10222 свечей для M15
+2025-03-19 19:27:13 [INFO] visualization: Загружено 30661 свечей для M5
+2025-03-19 19:27:13 [WARNING] visualization: Высокое использование памяти: 81.4%. Выполняется сборка мусора.
+2025-03-19 19:27:13 [INFO] visualization: Использование памяти после сборки мусора: 81.4%
+2025-03-19 19:27:13 [ERROR] visualization: Критическое использование памяти: 81.4%
+2025-03-19 19:27:13 [INFO] visualization: Создание графиков и отчетов...
+2025-03-19 19:27:13 [INFO] visualization: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\balance_chart_EURUSD.png
+2025-03-19 19:27:13 [INFO] visualization: Построение графика баланса заняло 0.29 секунд
+2025-03-19 19:27:13 [INFO] visualization: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\drawdown_chart_EURUSD.png
+2025-03-19 19:27:13 [INFO] visualization: Построение графика просадки заняло 0.28 секунд
+2025-03-19 19:27:14 [INFO] visualization: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\trades_distribution_EURUSD.png
+2025-03-19 19:27:14 [INFO] visualization: Построение распределения сделок заняло 0.45 секунд
+2025-03-19 19:27:14 [INFO] visualization: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\setup_statistics_EURUSD.csv
+2025-03-19 19:27:14 [INFO] visualization: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 19:27:14 [INFO] visualization: Анализ профит-фактора по сетапам занял 0.48 секунд
+2025-03-19 19:27:14 [INFO] visualization: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\monthly_statistics_EURUSD.csv
+2025-03-19 19:27:15 [INFO] visualization: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\monthly_analysis_EURUSD.png
+2025-03-19 19:27:15 [INFO] visualization: Анализ по месяцам занял 0.39 секунд
+2025-03-19 19:27:15 [INFO] visualization: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data\summary_EURUSD.txt
+2025-03-19 19:27:15 [INFO] visualization: Создание файла статистики заняло 0.01 секунд
+2025-03-19 19:27:15 [INFO] visualization: Построение графиков цены с отметками сделок...
+2025-03-19 19:27:16 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\price_chart_EURUSD_M5.png (без отметок сделок)
+2025-03-19 19:27:17 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\price_chart_EURUSD_M5_trades.png
+2025-03-19 19:27:18 [INFO] visualization: Построение графика цены для M5 заняло 2.74 секунд
+2025-03-19 19:27:18 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\price_chart_EURUSD_M15.png (без отметок сделок)
+2025-03-19 19:27:20 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\price_chart_EURUSD_M15_trades.png
+2025-03-19 19:27:20 [INFO] visualization: Построение графика цены для M15 заняло 2.11 секунд
+2025-03-19 19:27:20 [INFO] visualization: График цены сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\price_chart_EURUSD_H1.png (без отметок сделок)
+2025-03-19 19:27:21 [INFO] visualization: График цены с отметками сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts\price_chart_EURUSD_H1_trades.png
+2025-03-19 19:27:22 [INFO] visualization: Построение графика цены для H1 заняло 1.95 секунд
+2025-03-19 19:27:22 [WARNING] visualization: Высокое использование памяти: 81.6%. Выполняется сборка мусора.
+2025-03-19 19:27:22 [INFO] visualization: Использование памяти после сборки мусора: 81.5%
+2025-03-19 19:27:22 [ERROR] visualization: Критическое использование памяти: 81.5%
+2025-03-19 19:27:22 [INFO] visualization: 
+=== Визуализация завершена за 9.00 секунд! ===
+
+2025-03-19 19:27:22 [INFO] visualization: Результаты сохранены в директории: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13
+2025-03-19 19:27:22 [INFO] visualization: Чтобы просмотреть графики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\charts
+2025-03-19 19:27:22 [INFO] visualization: Чтобы просмотреть данные статистики, откройте папку: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-13\data
+2025-03-19 19:27:30 [INFO] visualization: 
+=== Начало визуализации результатов бэктеста ===
+
+2025-03-19 19:27:30 [INFO] visualization: Создана директория для результатов: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30
+2025-03-19 19:27:30 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:27:30 [INFO] visualization: Файл скопирован: backtest_results_EURUSD_20250319_142117.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:27:30 [INFO] visualization: Файл скопирован: backtest_entries_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\backtest_entries_EURUSD.csv
+2025-03-19 19:27:30 [INFO] visualization: Файл скопирован: backtest_exits_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\backtest_exits_EURUSD.csv
+2025-03-19 19:27:30 [INFO] visualization: Файл скопирован: backtest_sl_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\backtest_sl_EURUSD.csv
+2025-03-19 19:27:30 [INFO] visualization: Файл скопирован: backtest_tp_EURUSD.csv -> D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\backtest_tp_EURUSD.csv
+2025-03-19 19:27:30 [INFO] visualization: Загрузка данных бэктеста...
+2025-03-19 19:27:30 [INFO] visualization: Загрузка результатов из файла: D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:27:30 [INFO] visualization: Загружено 93 записей результатов бэктеста.
+2025-03-19 19:27:30 [INFO] visualization: Использование параллельной обработки для данных, но последовательного создания графиков...
+2025-03-19 19:27:30 [INFO] visualization: Загрузка ценовых данных для EURUSD...
+2025-03-19 19:27:30 [INFO] visualization: Загружено 10222 свечей для M15
+2025-03-19 19:27:30 [INFO] visualization: Загружено 2558 свечей для H1
+2025-03-19 19:27:30 [INFO] visualization: Загружено 30661 свечей для M5
+2025-03-19 19:27:30 [INFO] visualization: Создание графиков и отчетов...
+2025-03-19 19:27:30 [INFO] visualization: График баланса сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\charts\balance_chart_EURUSD.png
+2025-03-19 19:27:30 [INFO] visualization: Построение графика баланса заняло 0.28 секунд
+2025-03-19 19:27:31 [INFO] visualization: График просадки сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\charts\drawdown_chart_EURUSD.png
+2025-03-19 19:27:31 [INFO] visualization: Построение графика просадки заняло 0.30 секунд
+2025-03-19 19:27:31 [INFO] visualization: График распределения сделок сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\charts\trades_distribution_EURUSD.png
+2025-03-19 19:27:31 [INFO] visualization: Построение распределения сделок заняло 0.48 секунд
+2025-03-19 19:27:31 [INFO] visualization: Таблица со статистикой по сетапам сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\setup_statistics_EURUSD.csv
+2025-03-19 19:27:32 [INFO] visualization: График анализа прибыли по сетапам сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\charts\setup_profit_analysis_EURUSD.png
+2025-03-19 19:27:32 [INFO] visualization: Анализ профит-фактора по сетапам занял 0.56 секунд
+2025-03-19 19:27:32 [INFO] visualization: Таблица с месячной статистикой сохранена в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\monthly_statistics_EURUSD.csv
+2025-03-19 19:27:32 [INFO] visualization: График месячного анализа сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\charts\monthly_analysis_EURUSD.png
+2025-03-19 19:27:32 [INFO] visualization: Анализ по месяцам занял 0.41 секунд
+2025-03-19 19:27:32 [INFO] visualization: Файл с общей статистикой сохранен в D:\algo_bots\backtest_results\EURUSD_2025-03-19_19-27-30\data\summary_EURUSD.txt
+2025-03-19 19:27:32 [INFO] visualization: Создание файла статистики заняло 0.01 секунд
+2025-03-19 19:27:32 [INFO] visualization: Построение графиков цены с отметками сделок...
+2025-03-19 19:28:21 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:28:33 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:28:45 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:30:24 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:30:44 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:31:04 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:31:26 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:31:42 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:31:57 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:32:25 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:32:47 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:33:02 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:33:16 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:33:30 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:33:45 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:34:01 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:34:20 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:34:33 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:34:51 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:37:26 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
+2025-03-19 19:38:47 [INFO] visualization: Найден файл результатов: backtest_results_EURUSD_20250319_142117.csv
