@@ -30,78 +30,29 @@ OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backtest_
 # Создаем директорию для результатов, если она не существует
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def find_latest_backtest_files(symbol=None):
-    """
-    Находит последние файлы бэктеста
-    
-    Параметры:
-    symbol (str, optional): Символ для поиска файлов
-    
-    Возвращает:
-    tuple: (results_file, entries_file, exits_file, sl_file, tp_file)
-    """
+def find_latest_backtest_files():
     try:
-        # Определяем шаблоны для поиска файлов
-        if symbol:
-            results_pattern = f'backtest_results_{symbol}_*.csv'
-            entries_file = f'backtest_entries_{symbol}.csv'
-            exits_file = f'backtest_exits_{symbol}.csv'
-            sl_file = f'backtest_sl_{symbol}.csv'
-            tp_file = f'backtest_tp_{symbol}.csv'
-        else:
-            results_pattern = 'backtest_results_*.csv'
-            entries_file = f'backtest_entries_*.csv'
-            exits_file = f'backtest_exits_*.csv'
-            sl_file = f'backtest_sl_*.csv'
-            tp_file = f'backtest_tp_*.csv'
-            
-        # Ищем самый свежий файл результатов
-        import glob
-        result_files = glob.glob(results_pattern)
+        # Ищем самый свежий файл результатов в директории backtest_results
+        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backtest_results")
+        result_files = [f for f in os.listdir(results_dir) if f.startswith('backtest_results_') and f.endswith('.csv')]
         
         if not result_files:
             logger.warning("Файлы с результатами бэктеста не найдены!")
             return None, None, None, None, None
         
-        latest_result_file = max(result_files, key=os.path.getmtime)
+        latest_result_file = max(result_files, key=lambda x: os.path.getmtime(os.path.join(results_dir, x)))
+        latest_result_file = os.path.join(results_dir, latest_result_file)
         logger.info(f"Найден файл результатов: {latest_result_file}")
         
-        # Если символ не был указан, извлекаем его из имени файла
-        if not symbol:
-            # Пытаемся извлечь символ из имени файла
-            # Формат: backtest_results_SYMBOL_DATE.csv
-            parts = os.path.basename(latest_result_file).split('_')
-            if len(parts) >= 3:
-                symbol = parts[2]
-                
-                # Обновляем имена файлов с точным символом
-                entries_file = f'backtest_entries_{symbol}.csv'
-                exits_file = f'backtest_exits_{symbol}.csv'
-                sl_file = f'backtest_sl_{symbol}.csv'
-                tp_file = f'backtest_tp_{symbol}.csv'
-        
-        # Проверяем наличие файлов
-        if not os.path.exists(entries_file):
-            logger.warning(f"Файл {entries_file} не найден")
-            entries_file = None
-            
-        if not os.path.exists(exits_file):
-            logger.warning(f"Файл {exits_file} не найден")
-            exits_file = None
-            
-        if not os.path.exists(sl_file):
-            logger.warning(f"Файл {sl_file} не найден")
-            sl_file = None
-            
-        if not os.path.exists(tp_file):
-            logger.warning(f"Файл {tp_file} не найден")
-            tp_file = None
+        # Находим соответствующие файлы данных
+        entries_file = os.path.join(results_dir, f'backtest_entries_{SYMBOL}.csv')
+        exits_file = os.path.join(results_dir, f'backtest_exits_{SYMBOL}.csv')
+        sl_file = os.path.join(results_dir, f'backtest_sl_{SYMBOL}.csv')
+        tp_file = os.path.join(results_dir, f'backtest_tp_{SYMBOL}.csv')
         
         return latest_result_file, entries_file, exits_file, sl_file, tp_file
-    
     except Exception as e:
         logger.error(f"Ошибка при поиске файлов бэктеста: {str(e)}")
-        logger.exception(e)
         return None, None, None, None, None
 
 def load_data(file_path, optimize=True):
@@ -665,7 +616,7 @@ def create_monthly_analysis(results, theme=THEME):
         logger.exception(e)
         return None
 
-def create_price_chart(price_data, entries, exits, stop_losses, take_profits, current_time=None, theme=THEME):
+def create_price_chart(price_data, entries, exits, stop_losses, take_profits, current_time=None, theme=THEME, autoscale=True):
     """
     Создает свечной график с отметками сделок
     
@@ -961,6 +912,7 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
                 elif time_diff == 86400:  # 1 день
                     timeframe = "D1"
         
+        # Настраиваем макет
         fig.update_layout(
             title=f'График {symbol} ({timeframe})',
             xaxis_title='Время',
@@ -976,10 +928,24 @@ def create_price_chart(price_data, entries, exits, stop_losses, take_profits, cu
                 x=1
             )
         )
-        
-        # Устанавливаем видимый диапазон
+
+        # Устанавливаем видимый диапазон по X
         fig.update_xaxes(range=[visible_range[0], visible_range[1]])
-        
+
+        # Автоматически масштабируем ось Y, если требуется
+        if autoscale:
+            # Находим минимум и максимум цены в видимом диапазоне
+            if price_data is not None and not price_data.empty:
+                visible_data = price_data[(price_data['time'] >= visible_range[0]) & (price_data['time'] <= visible_range[1])]
+                
+                if not visible_data.empty:
+                    min_price = visible_data['low'].min()
+                    max_price = visible_data['high'].max()
+                    
+                    # Добавляем небольшой отступ для лучшего отображения
+                    padding = (max_price - min_price) * 0.05
+                    fig.update_yaxes(range=[min_price - padding, max_price + padding])
+
         return fig
     
     except Exception as e:
@@ -1738,7 +1704,8 @@ def create_realtime_visualizer(results=None, entries=None, exits=None, stop_loss
                 global_data['exits'],
                 global_data['stop_losses'],
                 global_data['take_profits'],
-                current_time
+                current_time,
+                autoscale=True  # Всегда включаем автомасштабирование
             )
             
             # Если нет графика цены, создаем пустой график

@@ -140,28 +140,24 @@ def create_results_directory():
     return results_dir, data_dir, charts_dir, interactive_dir
 
 def find_latest_backtest_files():
-    """
-    Находит последние файлы бэктеста
-    
-    Возвращает:
-    tuple: (results_file, entries_file, exits_file, sl_file, tp_file)
-    """
     try:
-        # Ищем самый свежий файл результатов
-        result_files = [f for f in os.listdir() if f.startswith('backtest_results_') and f.endswith('.csv')]
+        # Ищем самый свежий файл результатов в директории backtest_results
+        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backtest_results")
+        result_files = [f for f in os.listdir(results_dir) if f.startswith('backtest_results_') and f.endswith('.csv')]
         
         if not result_files:
             logger.warning("Файлы с результатами бэктеста не найдены!")
             return None, None, None, None, None
         
-        latest_result_file = max(result_files, key=lambda x: os.path.getmtime(x))
+        latest_result_file = max(result_files, key=lambda x: os.path.getmtime(os.path.join(results_dir, x)))
+        latest_result_file = os.path.join(results_dir, latest_result_file)
         logger.info(f"Найден файл результатов: {latest_result_file}")
         
         # Находим соответствующие файлы данных
-        entries_file = f'backtest_entries_{SYMBOL}.csv'
-        exits_file = f'backtest_exits_{SYMBOL}.csv'
-        sl_file = f'backtest_sl_{SYMBOL}.csv'
-        tp_file = f'backtest_tp_{SYMBOL}.csv'
+        entries_file = os.path.join(results_dir, f'backtest_entries_{SYMBOL}.csv')
+        exits_file = os.path.join(results_dir, f'backtest_exits_{SYMBOL}.csv')
+        sl_file = os.path.join(results_dir, f'backtest_sl_{SYMBOL}.csv')
+        tp_file = os.path.join(results_dir, f'backtest_tp_{SYMBOL}.csv')
         
         return latest_result_file, entries_file, exits_file, sl_file, tp_file
     except Exception as e:
