@@ -3,8 +3,9 @@ import logging
 import os
 import sys
 import traceback
+import argparse
 from datetime import datetime, timedelta
-from config import CHECK_INTERVAL, MODE, SYMBOL, LOG_LEVEL, is_trading_allowed
+from config import CHECK_INTERVAL, MODE, SYMBOL, LOG_LEVEL, is_trading_allowed, MAX_POSITIONS
 from mt5_connector import connect_mt5, disconnect_mt5, get_account_info, get_open_positions
 from trade_executor import execute_trade
 from backtest import backtest
@@ -292,6 +293,17 @@ def run_live_trading():
     else:
         logging.info("Нет открытых позиций")
     
+    # Создаем словарь для отслеживания открытых позиций по символам
+    open_positions_tracking = {}
+    
+    # Заполняем словарь начальными данными
+    if positions:
+        for pos in positions:
+            symbol = pos['symbol']
+            if symbol not in open_positions_tracking:
+                open_positions_tracking[symbol] = []
+            open_positions_tracking[symbol].append({'ticket': pos['ticket'], 'type': pos['type']})
+    
     try:
         last_check_time = time.time()
         cycle_count = 0
@@ -305,9 +317,43 @@ def run_live_trading():
                         logging.error("Ошибка подключения к MT5, повтор через 30 секунд")
                         time.sleep(30)
                         continue
+                    
+                    # После переподключения обновляем информацию об открытых позициях
+                    current_positions = get_open_positions()
+                    
+                    # Создаем новый словарь текущих позиций
+                    current_positions_dict = {}
+                    if current_positions:
+                        for pos in current_positions:
+                            symbol = pos['symbol']
+                            if symbol not in current_positions_dict:
+                                current_positions_dict[symbol] = []
+                            current_positions_dict[symbol].append({'ticket': pos['ticket'], 'type': pos['type']})
+                    
+                    # Обновляем словарь отслеживания
+                    open_positions_tracking = current_positions_dict
                 
-                # Выполняем торговую логику
-                execute_trade()
+                # Получаем текущие открытые позиции для проверки перед выполнением торговой логики
+                current_positions = get_open_positions(symbol=SYMBOL)
+                
+                # Проверяем, есть ли уже открытые позиции для текущего символа
+                # и допустимо ли открытие новых позиций
+                if len(current_positions) < MAX_POSITIONS:
+                    # Извлекаем типы текущих открытых позиций для символа
+                    current_types = [pos['type'] for pos in current_positions]
+                    
+                    # Выполняем торговую логику
+                    # Если есть сигнал, он будет проверен на соответствие с текущими открытыми позициями
+                    signal = execute_trade()
+                    
+                    # Если был открыт новый ордер, обновляем информацию в tracking
+                    if signal:
+                        symbol = signal['symbol']
+                        if symbol not in open_positions_tracking:
+                            open_positions_tracking[symbol] = []
+                        open_positions_tracking[symbol].append({'ticket': signal['ticket'], 'type': signal['type']})
+                else:
+                    logging.info(f"Достигнуто максимальное количество позиций для {SYMBOL}: {len(current_positions)}/{MAX_POSITIONS}")
                 
                 # Логируем активность каждый час
                 current_time = time.time()
@@ -343,6 +389,20 @@ def main():
     try:
         # Выводим информацию о запуске
         logging.info(f"Запуск AlgoTrade бота (Версия 1.0, Режим: {MODE})")
+
+        # Инициализируем Telegram-нотификатор, если включен
+        try:
+            from telegram_notifier import initialize_telegram_notifier
+            from config import TELEGRAM_ENABLED, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+            
+            if TELEGRAM_ENABLED:
+                notifier = initialize_telegram_notifier(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
+                if notifier.enabled:
+                    logging.info("Telegram-уведомления включены")
+                else:
+                    logging.warning("Telegram-уведомления отключены: не указан токен бота или ID чата")
+        except Exception as e:
+            logging.warning(f"Не удалось инициализировать Telegram-нотификатор: {str(e)}")
         
         # Запускаем соответствующий режим
         if MODE.lower() == "backtest":

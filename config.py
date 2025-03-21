@@ -80,11 +80,16 @@ LOG_FILE = "bot_logs.txt"  # Файл для логов
 LOG_LEVEL = "INFO"  # Уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 SAVE_CHARTS = True  # Сохранять ли графики с сигналами
 
+# === Telegram-уведомления ===
+TELEGRAM_ENABLED = True  # Включить уведомления в Telegram
+TELEGRAM_BOT_TOKEN = "8010458678:AAHGU6oqW8DbAQlhvqz-bRGr4hk023RUSi8"  # Токен вашего Telegram-бота
+TELEGRAM_CHAT_ID = "739207956"  # ID чата для отправки уведомлений
+
 # === Интервал проверки сделок ===
 CHECK_INTERVAL = 300  # Время между проверками сигналов (в секундах, увеличено до 5 минут)
 
 # === Режим работы (backtest / live) ===
-MODE = "backtest"  # Установи "backtest" для бэктеста, "live" для реальной торговли
+MODE = "live"  # Установи "backtest" для бэктеста, "live" для реальной торговли
 
 # === Начальный баланс ===
 INITIAL_BALANCE = 10000  # Начальный депозит для расчета прибыли

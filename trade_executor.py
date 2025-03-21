@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 from config import (
     SYMBOL, RISK_PER_TRADE, MIN_STOPLOSS_PIPS, MAX_SPREAD, 
-    MAX_POSITIONS, MAX_DAILY_RISK, STRATEGY_SETTINGS
+    MAX_POSITIONS, MAX_DAILY_RISK, TIMEFRAMES
 )
 from mt5_connector import (
     connect_mt5, disconnect_mt5, get_account_info, 
@@ -316,6 +316,16 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
     dict: Информация о выполненной сделке или None в случае ошибки
     """
     with _trade_lock:
+        # Инициализируем Telegram-нотификатор, если включен
+        try:
+            from telegram_notifier import initialize_telegram_notifier
+            from config import TELEGRAM_ENABLED, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+            
+            if TELEGRAM_ENABLED:
+                initialize_telegram_notifier(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
+        except Exception as e:
+            logger.warning(f"Не удалось инициализировать Telegram-нотификатор: {str(e)}")
+
         # Используем значение риска из параметров или из конфига
         if risk_per_trade is None:
             risk_per_trade = RISK_PER_TRADE
@@ -327,13 +337,34 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
                 logger.info(f"Торговля не разрешена: {reason}")
                 return None
         
-        from data_fetcher import get_historical_data
+        from data_fetcher import get_historical_data, get_multi_timeframe_data
         
         # Если нет предопределенного сигнала, ищем новый
         if from_signal is None:
-            # Получаем данные и ищем сигнал
-            df = get_historical_data(symbol, timeframe="M5", num_candles=100, use_cache=False)
-            signal = find_trade_signal(df) if df is not None else None
+            # Получаем данные и ищем сигнал для каждого таймфрейма, начиная с более крупных (от старшего к младшему)
+            # Сортируем таймфреймы от старшего к младшему
+            sorted_timeframes = sorted(TIMEFRAMES, key=lambda x: TIMEFRAMES.index(x), reverse=True)
+            
+            # Загружаем данные для всех таймфреймов
+            multi_tf_data = get_multi_timeframe_data(symbol, sorted_timeframes, use_cache=True)
+            
+            if multi_tf_data is None:
+                logger.error("Не удалось загрузить данные для анализа")
+                return None
+            
+            # Проверяем сигналы, начиная со старших таймфреймов
+            signal = None
+            for tf in sorted_timeframes:
+                if tf in multi_tf_data:
+                    df = multi_tf_data[tf]
+                    if df is not None and len(df) >= 30:  # Проверяем, что достаточно данных для анализа
+                        temp_signal = find_trade_signal(df)
+                        if temp_signal:
+                            # Добавляем информацию о таймфрейме к сигналу
+                            temp_signal['tf'] = tf
+                            signal = temp_signal
+                            logger.info(f"Найден сигнал на таймфрейме {tf}")
+                            break
         else:
             signal = from_signal
         
@@ -399,7 +430,7 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
         
         # Формируем комментарий для ордера
         setup_type = signal.get("setup", "Standard")
-        comment = f"AlgoTrade_{setup_type}"
+        comment = f"Algo_{setup_type}"[:31]  # Ограничиваем длиной 31 символ
         
         # Открываем ордер
         order_info = open_order(

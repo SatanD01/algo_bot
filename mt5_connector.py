@@ -492,6 +492,26 @@ def close_position(ticket, deviation=10, retry_on_error=True):
             return False
         
         logger.info(f"Позиция {ticket} успешно закрыта")
+        
+        # Добавляем отправку уведомления в Telegram
+        try:
+            from telegram_notifier import get_notifier
+            notifier = get_notifier()
+            if notifier and notifier.enabled:
+                # Подготавливаем данные для уведомления
+                trade_info = {
+                    "symbol": position.symbol,
+                    "order": "buy" if position.type == mt5.POSITION_TYPE_BUY else "sell",
+                    "entry_price": position.price_open,
+                    "exit_price": result.price if hasattr(result, 'price') else mt5.symbol_info_tick(position.symbol).bid if position.type == mt5.POSITION_TYPE_BUY else mt5.symbol_info_tick(position.symbol).ask,
+                    "profit": position.profit,
+                    "result": "win" if position.profit > 0 else "loss",
+                    "exit_type": "close"
+                }
+                notifier.send_trade_close_notification(trade_info)
+        except Exception as e:
+            logger.error(f"Ошибка при отправке уведомления о закрытии сделки: {str(e)}")
+        
         return True
         
     except Exception as e:
@@ -567,6 +587,26 @@ def close_position_market(ticket, retry_on_error=True):
             return False
         
         logger.info(f"Позиция {ticket} успешно закрыта по рыночной цене")
+        
+        # Добавляем отправку уведомления в Telegram
+        try:
+            from telegram_notifier import get_notifier
+            notifier = get_notifier()
+            if notifier and notifier.enabled:
+                # Подготавливаем данные для уведомления
+                trade_info = {
+                    "symbol": position.symbol,
+                    "order": "buy" if position.type == mt5.POSITION_TYPE_BUY else "sell",
+                    "entry_price": position.price_open,
+                    "exit_price": result.price if hasattr(result, 'price') else mt5.symbol_info_tick(position.symbol).bid if position.type == mt5.POSITION_TYPE_BUY else mt5.symbol_info_tick(position.symbol).ask,
+                    "profit": position.profit,
+                    "result": "win" if position.profit > 0 else "loss",
+                    "exit_type": "market_close"
+                }
+                notifier.send_trade_close_notification(trade_info)
+        except Exception as e:
+            logger.error(f"Ошибка при отправке уведомления о закрытии сделки: {str(e)}")
+        
         return True
         
     except Exception as e:
@@ -745,6 +785,14 @@ def open_order(symbol, order_type, volume, price=None, sl=None, tp=None, deviati
         volume_step = symbol_info.volume_step
         volume = round(volume / volume_step) * volume_step
         
+        # Проверяем и ограничиваем длину комментария (MT5 имеет ограничение на длину комментария)
+        if comment:
+            # Ограничиваем комментарий 31 символом для безопасности
+            comment = comment[:31]
+        else:
+            # Используем стандартный комментарий, если не указан
+            comment = f"{order_type[:3]}-{symbol}"
+        
         # Формируем запрос
         request = {
             "action": mt5.TRADE_ACTION_DEAL,  # Рыночный ордер
@@ -754,7 +802,7 @@ def open_order(symbol, order_type, volume, price=None, sl=None, tp=None, deviati
             "price": price,
             "deviation": deviation,
             "magic": magic,
-            "comment": comment if comment else f"Order {order_type} {volume} lots",
+            "comment": comment,
             "type_time": mt5.ORDER_TIME_GTC,  # Ордер действителен до отмены
             "type_filling": mt5.ORDER_FILLING_IOC,  # Исполнить сразу или отменить
         }
@@ -823,6 +871,26 @@ def open_order(symbol, order_type, volume, price=None, sl=None, tp=None, deviati
         }
         
         logger.info(f"Ордер успешно открыт: {order_type} {volume} лот(ов) {symbol} по цене {price}")
+        
+        # Добавляем отправку уведомления в Telegram
+        try:
+            from telegram_notifier import get_notifier
+            notifier = get_notifier()
+            if notifier and notifier.enabled:
+                # Подготавливаем данные для уведомления
+                trade_info = {
+                    "symbol": symbol,
+                    "order": order_type,
+                    "entry_price": price,
+                    "sl": sl,
+                    "tp": tp,
+                    "lot_size": volume,
+                    "setup": comment.split('_')[-1] if comment and '_' in comment else "Standard"
+                }
+                notifier.send_trade_open_notification(trade_info)
+        except Exception as e:
+            logger.error(f"Ошибка при отправке уведомления о открытии сделки: {str(e)}")
+        
         return order_info
         
     except Exception as e:
