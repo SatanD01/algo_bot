@@ -542,8 +542,7 @@ def main():
                     print("1. Стандартный бэктест")
                     print("2. Оптимизированный бэктест (быстрее)")
                     print("3. Визуализация результатов")
-                    print("4. Журнал сделок и статистика")
-                    print("5. Выход")
+                    print("4. Выход")
                     
                     try:
                         choice = input("Ваш выбор (1-5): ").strip()
@@ -555,12 +554,10 @@ def main():
                         elif choice == "3":
                             run_visualization_menu()
                         elif choice == "4":
-                            run_trade_journal_menu()
-                        elif choice == "5":
                             print("Выход из программы")
                             break
                         else:
-                            print("Некорректный выбор. Пожалуйста, выберите 1-5.")
+                            print("Некорректный выбор. Пожалуйста, выберите 1-4.")
                     except Exception as e:
                         logging.error(f"Ошибка при выполнении действия: {str(e)}")
                         logging.error(traceback.format_exc())

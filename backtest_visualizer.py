@@ -30,7 +30,7 @@ OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backtest_
 # Создаем директорию для результатов, если она не существует
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def find_latest_backtest_files():
+def find_latest_backtest_files(symbol=None):
     try:
         # Ищем самый свежий файл результатов в директории backtest_results
         results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backtest_results")
@@ -44,11 +44,18 @@ def find_latest_backtest_files():
         latest_result_file = os.path.join(results_dir, latest_result_file)
         logger.info(f"Найден файл результатов: {latest_result_file}")
         
+        # Определяем символ из имени файла, если он не был передан
+        if not symbol:
+            parts = os.path.basename(latest_result_file).split('_')
+            if len(parts) >= 3:
+                symbol = parts[2].split('.')[0]  # Убираем расширение файла
+                logger.info(f"Определен символ: {symbol}")
+        
         # Находим соответствующие файлы данных
-        entries_file = os.path.join(results_dir, f'backtest_entries_{SYMBOL}.csv')
-        exits_file = os.path.join(results_dir, f'backtest_exits_{SYMBOL}.csv')
-        sl_file = os.path.join(results_dir, f'backtest_sl_{SYMBOL}.csv')
-        tp_file = os.path.join(results_dir, f'backtest_tp_{SYMBOL}.csv')
+        entries_file = os.path.join(results_dir, f'backtest_entries_{symbol}.csv')
+        exits_file = os.path.join(results_dir, f'backtest_exits_{symbol}.csv')
+        sl_file = os.path.join(results_dir, f'backtest_sl_{symbol}.csv')
+        tp_file = os.path.join(results_dir, f'backtest_tp_{symbol}.csv')
         
         return latest_result_file, entries_file, exits_file, sl_file, tp_file
     except Exception as e:
@@ -2133,6 +2140,236 @@ def update_realtime_data(visualizer, data):
     except Exception as e:
         logger.error(f"Ошибка при обновлении данных в реальном времени: {str(e)}")
         logger.exception(e)
+
+def start_visualization(timeframe_data=None, symbol=None, timeframes=None, with_prices=True, debug=False):
+    """
+    Запускает интерактивную визуализацию в реальном времени
+    
+    Параметры:
+    timeframe_data (dict, optional): Словарь с данными по таймфреймам
+    symbol (str, optional): Торговый символ
+    timeframes (list, optional): Список таймфреймов для графиков цены
+    with_prices (bool): Включать ли графики цен
+    debug (bool): Включить режим отладки
+    
+    Возвращает:
+    object: Объект визуализатора или None в случае ошибки
+    """
+    try:
+        # Если указаны данные таймфреймов, используем их
+        if timeframe_data:
+            # Используем функцию create_realtime_visualizer с переданными данными
+            return create_realtime_visualizer(
+                results=None,
+                entries=None,
+                exits=None,
+                stop_losses=None,
+                take_profits=None,
+                timeframe_data=timeframe_data
+            )
+        else:
+            # В противном случае запускаем обычный режим визуализации
+            return visualize_backtest(symbol, timeframes, with_prices, debug, show_interactive=True)
+    except Exception as e:
+        logger.error(f"Ошибка при запуске визуализации: {str(e)}")
+        logger.exception(e)
+        return None
+
+def update_visualization(visualizer, update_data):
+    """
+    Обновляет данные в визуализаторе в реальном времени
+    
+    Параметры:
+    visualizer (object): Объект визуализатора
+    update_data (dict): Данные для обновления
+    
+    Возвращает:
+    bool: True в случае успеха, False в случае ошибки
+    """
+    try:
+        # Проверяем, что визуализатор существует
+        if visualizer is None:
+            return False
+        
+        # Обновляем данные с помощью функции update_realtime_data
+        update_realtime_data(visualizer, update_data)
+        return True
+    except Exception as e:
+        logger.error(f"Ошибка при обновлении визуализации: {str(e)}")
+        logger.exception(e)
+        return False
+
+def register_trade(visualizer, trade_data):
+    """
+    Регистрирует сделку в визуализаторе
+    
+    Параметры:
+    visualizer (object): Объект визуализатора
+    trade_data (dict): Данные о сделке
+    
+    Возвращает:
+    bool: True в случае успеха, False в случае ошибки
+    """
+    try:
+        # Проверяем, что визуализатор существует
+        if visualizer is None:
+            return False
+        
+        # Формируем данные для обновления
+        update_data = {
+            'action': 'update_trades',
+            'current_time': trade_data.get('time', datetime.now())
+        }
+        
+        # Если это открытие сделки
+        if trade_data.get('type') in ['entry', 'open']:
+            update_data['entry'] = {
+                'time': trade_data.get('time', datetime.now()),
+                'price': trade_data.get('price', 0),
+                'order': trade_data.get('order', 'buy'),
+                'setup': trade_data.get('setup', 'Standard')
+            }
+            
+            # Добавляем стоп-лосс, если есть
+            if 'sl' in trade_data:
+                update_data['sl'] = {
+                    'time': trade_data.get('time', datetime.now()),
+                    'price': trade_data.get('sl', 0),
+                    'order': trade_data.get('order', 'buy')
+                }
+            
+            # Добавляем тейк-профит, если есть
+            if 'tp' in trade_data:
+                update_data['tp'] = {
+                    'time': trade_data.get('time', datetime.now()),
+                    'price': trade_data.get('tp', 0),
+                    'order': trade_data.get('order', 'buy')
+                }
+        
+        # Если это закрытие сделки
+        elif trade_data.get('type') in ['exit', 'close']:
+            update_data['exit'] = {
+                'time': trade_data.get('time', datetime.now()),
+                'price': trade_data.get('price', 0),
+                'order': trade_data.get('order', 'buy'),
+                'result': trade_data.get('result', 'unknown')
+            }
+            
+            # Добавляем информацию о прибыли
+            update_data['action'] = 'update_statistics'
+            update_data['profit'] = trade_data.get('profit', 0)
+            update_data['balance'] = trade_data.get('balance', 10000)
+            update_data['trade_result'] = trade_data.get('result', 'unknown')
+        
+        # Обновляем данные в визуализаторе
+        return update_visualization(visualizer, update_data)
+    except Exception as e:
+        logger.error(f"Ошибка при регистрации сделки в визуализаторе: {str(e)}")
+        logger.exception(e)
+        return False
+
+def visualize_backtest(symbol=None, timeframes=None, with_prices=True, debug=False, show_interactive=False):
+    """
+    Основная функция для визуализации результатов бэктеста
+    
+    Параметры:
+    symbol (str, optional): Символ
+    timeframes (list, optional): Список таймфреймов для графиков цены
+    with_prices (bool): Включать ли графики цен
+    debug (bool): Включить режим отладки
+    show_interactive (bool): Показывать ли интерактивную визуализацию
+    
+    Возвращает:
+    bool или object: True/визуализатор в случае успеха, False/None в случае ошибки
+    """
+    global SYMBOL, THEME
+    SYMBOL = symbol
+    
+    # Устанавливаем уровень логирования
+    if debug:
+        logger.setLevel(logging.DEBUG)
+    
+    logger.info("=== Запуск визуализации бэктеста ===")
+    
+    # 1. Находим файлы с результатами бэктеста
+    result_file, entries_file, exits_file, sl_file, tp_file = find_latest_backtest_files(symbol)
+    
+    if result_file is None:
+        logger.error("Не удалось найти результаты бэктеста. Визуализация прервана.")
+        return False if not show_interactive else None
+    
+    # Получаем символ из имени файла результатов, если не был указан
+    if not symbol:
+        parts = os.path.basename(result_file).split('_')
+        if len(parts) >= 3:
+            SYMBOL = parts[2]
+            logger.info(f"Определен символ: {SYMBOL}")
+    
+    # 2. Загружаем данные
+    logger.info("Загрузка данных бэктеста...")
+    results = load_data(result_file)
+    entries = load_data(entries_file)
+    exits = load_data(exits_file)
+    stop_losses = load_data(sl_file)
+    take_profits = load_data(tp_file)
+    
+    if results is None or results.empty:
+        logger.error("Не удалось загрузить данные бэктеста. Визуализация прервана.")
+        return False if not show_interactive else None
+    
+    logger.info(f"Загружено {len(results)} записей результатов бэктеста.")
+    
+    # 3. Загружаем данные цен, если требуется
+    price_data = {}
+    if with_prices:
+        if timeframes is None:
+            # Используем основные таймфреймы по умолчанию
+            timeframes = ["M5", "M15", "H1"]
+        
+        logger.info(f"Загрузка данных цен для {timeframes}...")
+        
+        # Определяем диапазон дат из результатов
+        if 'entry_time' in results.columns and 'exit_time' in results.columns:
+            start_date = results['entry_time'].min() - timedelta(days=5)
+            end_date = results['exit_time'].max() + timedelta(days=5)
+            
+            for tf in timeframes:
+                df = load_price_data(SYMBOL, tf, start_date, end_date)
+                if df is not None and not df.empty:
+                    price_data[tf] = df
+                    logger.info(f"Загружено {len(df)} свечей для {tf}")
+        else:
+            logger.warning("Не удалось определить диапазон дат для загрузки данных цен.")
+    
+    # 4. Если нужна интерактивная визуализация, возвращаем визуализатор
+    if show_interactive:
+        logger.info("Запуск интерактивной визуализации...")
+        return create_realtime_visualizer(
+            results=results,
+            entries=entries,
+            exits=exits,
+            stop_losses=stop_losses,
+            take_profits=take_profits,
+            timeframe_data=price_data
+        )
+    
+    # 5. Создаем HTML-отчет
+    logger.info("Создание HTML-отчета...")
+    html_file = create_summary_html(results, entries, exits, stop_losses, take_profits, price_data)
+    
+    if html_file is None:
+        logger.error("Не удалось создать HTML-отчет.")
+        return False
+    
+    # 6. Открываем отчет в браузере, если требуется
+    if AUTO_OPEN:
+        open_html_report(html_file)
+    
+    logger.info("=== Визуализация завершена ===")
+    logger.info(f"Отчет сохранен в файле: {html_file}")
+    print(f"\nВизуализация завершена. Отчет сохранен в файле: {html_file}")
+    
+    return True
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Визуализация результатов бэктеста")

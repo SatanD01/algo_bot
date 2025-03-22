@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 from config import (
     SYMBOL, RISK_PER_TRADE, MIN_STOPLOSS_PIPS, MAX_SPREAD, 
-    MAX_POSITIONS, MAX_DAILY_RISK, TIMEFRAMES
+    MAX_POSITIONS, MAX_DAILY_RISK, TIMEFRAMES, STRATEGY_SETTINGS
 )
 from mt5_connector import (
     connect_mt5, disconnect_mt5, get_account_info, 
@@ -393,7 +393,10 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
         
         # Если нет предопределенного сигнала, ищем новый
         if from_signal is None:
-            # Получаем данные и ищем сигнал для каждого таймфрейма, начиная с более крупных (от старшего к младшему)
+            # Получаем данные и ищем сигнал
+            df = get_historical_data(symbol, timeframe="M5", num_candles=100, use_cache=False)
+            signal = find_trade_signal(df) if df is not None else None
+            
             # Сортируем таймфреймы от старшего к младшему
             sorted_timeframes = sorted(TIMEFRAMES, key=lambda x: TIMEFRAMES.index(x), reverse=True)
             
