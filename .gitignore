@@ -29,7 +29,7 @@ MANIFEST
 bot_logs.txt
 data_cache/
 logs/
-trade_jornal/
+trade_journal/
 backtest_results/
 
 # PyInstaller
