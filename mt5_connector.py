@@ -411,6 +411,7 @@ def get_open_positions(symbol=None, magic=None, retry_on_error=True):
 def close_position(ticket, deviation=10, retry_on_error=True):
     """
     Закрытие позиции по тикету с улучшенной обработкой ошибок
+    и интеграцией с системой риск-менеджмента
     
     Параметры:
     ticket (int): Тикет позиции
@@ -493,6 +494,10 @@ def close_position(ticket, deviation=10, retry_on_error=True):
         
         logger.info(f"Позиция {ticket} успешно закрыта")
 
+        # Получение информации о счете после закрытия позиции
+        account_info = get_account_info()
+        current_balance = account_info["balance"] if account_info else None
+
         # Запись о закрытии сделки в журнал
         try:
             from trade_journal import TradeJournal
@@ -516,6 +521,32 @@ def close_position(ticket, deviation=10, retry_on_error=True):
                 logger.info(f"Информация о закрытии сделки добавлена в расширенный журнал (тикет: {ticket})")
         except Exception as e:
             logger.warning(f"Ошибка при записи о закрытии сделки в журнал: {str(e)}")
+
+        # Обновление риск-менеджера
+        try:
+            from risk_manager import get_risk_manager
+            
+            risk_manager = get_risk_manager(init_if_none=False)
+            if risk_manager is not None and current_balance is not None:
+                # Регистрируем результат сделки
+                risk_manager.register_trade_result(
+                    position.profit, # Прибыль/убыток
+                    0,               # Риск уже был учтен при открытии
+                    current_balance  # Текущий баланс
+                )
+                logger.info(f"Результат сделки зарегистрирован в риск-менеджере: P/L={position.profit}")
+            
+                # Получаем рекомендации для следующих сделок
+                if position.profit < 0 and abs(position.profit) > 50:  # Значительный убыток
+                    recommendations = risk_manager.get_trade_recommendations()
+                    logger.info(f"Рекомендации риск-менеджера после убыточной сделки: "
+                             f"риск={recommendations.get('recommended_risk_per_trade', 0)*100:.2f}%, "
+                             f"R/R={recommendations.get('recommended_r_r_ratio', 0)}, "
+                             f"подход: {recommendations.get('recommended_approach', 'Н/Д')}")
+        except ImportError:
+            logger.debug("Модуль риск-менеджера недоступен")
+        except Exception as e:
+            logger.warning(f"Ошибка при обновлении риск-менеджера: {str(e)}")
 
         # Добавляем отправку уведомления в Telegram
         try:

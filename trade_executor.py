@@ -160,6 +160,7 @@ def reset_daily_risk():
 def calculate_lot_size(balance, risk_percentage, stop_loss_pips, symbol=SYMBOL, max_risk_per_trade=0.02):
     """
     Улучшенный расчет размера лота в зависимости от риска и стоп-лосса
+    с использованием системы управления рисками
     
     Параметры:
     balance (float): Текущий баланс счета
@@ -176,6 +177,43 @@ def calculate_lot_size(balance, risk_percentage, stop_loss_pips, symbol=SYMBOL, 
             logger.error(f"Некорректное значение стоп-лосса: {stop_loss_pips} пипсов")
             return 0.01, 0.0, 0.0  # Минимальный лот при ошибке
         
+        # Получаем информацию о символе
+        symbol_info = get_cached_symbol_info(symbol)
+        if symbol_info is None:
+            logger.error(f"Не удалось получить информацию о символе {symbol}")
+            return 0.01, 0.0, 0.0  # Минимальный лот при ошибке
+        
+        # Используем риск-менеджер для расчета размера позиции, если доступен
+        try:
+            from risk_manager import get_risk_manager
+            
+            # Инициализируем риск-менеджер с текущим балансом
+            risk_manager = get_risk_manager(account_balance=balance)
+            
+            # Если риск-менеджер доступен, используем его для расчета
+            if risk_manager is not None:
+                # Ограничиваем риск
+                adjusted_risk = min(risk_percentage, max_risk_per_trade)
+                
+                # Рассчитываем размер позиции с помощью риск-менеджера
+                lot_size, risk_amount, actual_risk = risk_manager.calculate_position_size(
+                    stop_loss_pips, 0, symbol_info, max_risk_override=adjusted_risk
+                )
+                
+                # Логируем результат
+                logger.info(f"Расчет лота через риск-менеджер: баланс=${balance}, "
+                           f"риск={adjusted_risk*100:.2f}%, SL={stop_loss_pips} пипсов, "
+                           f"лот={lot_size}, риск=${risk_amount:.2f}")
+                
+                return lot_size, risk_amount, actual_risk
+                
+        except ImportError:
+            logger.debug("Модуль риск-менеджера недоступен, используем стандартный метод расчета")
+        except Exception as e:
+            logger.warning(f"Ошибка при использовании риск-менеджера: {str(e)}. Используем стандартный метод расчета")
+        
+        # Стандартный метод расчета, если риск-менеджер недоступен или произошла ошибка
+        
         # Ограничиваем риск
         adjusted_risk = min(risk_percentage, max_risk_per_trade)
         
@@ -189,12 +227,6 @@ def calculate_lot_size(balance, risk_percentage, stop_loss_pips, symbol=SYMBOL, 
         
         # Ограничиваем риск оставшимся дневным лимитом
         adjusted_risk = min(adjusted_risk, remaining_daily_risk)
-        
-        # Получаем информацию о символе
-        symbol_info = get_cached_symbol_info(symbol)
-        if symbol_info is None:
-            logger.error(f"Не удалось получить информацию о символе {symbol}")
-            return 0.01, 0.0, adjusted_risk  # Минимальный лот при ошибке
         
         # Получаем значение пункта (point) и его стоимость (tick_value)
         point = symbol_info["point"]
@@ -378,6 +410,21 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
         except Exception as e:
             logger.warning(f"Не удалось инициализировать Telegram-нотификатор: {str(e)}")
 
+        # Инициализируем риск-менеджер, если он доступен
+        risk_manager = None
+        try:
+            from risk_manager import get_risk_manager
+            # Получаем информацию о счете для инициализации риск-менеджера
+            account_info = get_account_info()
+            if account_info:
+                balance = account_info["balance"]
+                risk_manager = get_risk_manager(account_balance=balance)
+                logger.info("Риск-менеджер инициализирован")
+        except ImportError:
+            logger.debug("Модуль риск-менеджера недоступен")
+        except Exception as e:
+            logger.warning(f"Ошибка при инициализации риск-менеджера: {str(e)}")
+
         # Используем значение риска из параметров или из конфига
         if risk_per_trade is None:
             risk_per_trade = RISK_PER_TRADE
@@ -388,6 +435,13 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
             if not can_trade:
                 logger.info(f"Торговля не разрешена: {reason}")
                 return None
+            
+            # Дополнительная проверка через риск-менеджер, если он доступен
+            if risk_manager:
+                can_trade_risk, reason_risk = risk_manager.can_trade()
+                if not can_trade_risk:
+                    logger.warning(f"Торговля остановлена риск-менеджером: {reason_risk}")
+                    return None
         
         from data_fetcher import get_historical_data, get_multi_timeframe_data
         
@@ -438,14 +492,6 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
             stop_loss_pips = MIN_STOPLOSS_PIPS if MIN_STOPLOSS_PIPS else 30  # По умолчанию 30 пипсов
             stop_loss = stop_loss_pips * 0.0001
         
-        # Аналогично с тейк-профитом
-        if "take_profit" in signal and signal["take_profit"] > 0:
-            take_profit = signal["take_profit"]
-            take_profit_pips = int(take_profit / 0.0001)  # Перевод в пипсы
-        else:
-            take_profit_pips = stop_loss_pips * 3  # TP = 3x SL
-            take_profit = take_profit_pips * 0.0001
-        
         # Получаем информацию о счете
         account_info = get_account_info()
         if account_info is None:
@@ -453,6 +499,35 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
             return None
         
         balance = account_info["balance"]
+        
+        # Определяем тейк-профит с использованием риск-менеджера, если доступен
+        if risk_manager:
+            # Получаем рекомендованное соотношение риск/доходность
+            recommendations = risk_manager.get_trade_recommendations()
+            recommended_rr = recommendations.get("recommended_r_r_ratio")
+            
+            # Используем его, если доступно
+            if recommended_rr:
+                take_profit_pips = risk_manager.calculate_take_profit(stop_loss_pips, recommended_rr)
+                take_profit = take_profit_pips * 0.0001
+                logger.info(f"Тейк-профит рассчитан риск-менеджером: {take_profit_pips} пипсов (R/R = {recommended_rr})")
+            else:
+                # Аналогично с тейк-профитом, если нет в сигнале
+                if "take_profit" in signal and signal["take_profit"] > 0:
+                    take_profit = signal["take_profit"]
+                    take_profit_pips = int(take_profit / 0.0001)  # Перевод в пипсы
+                else:
+                    take_profit_pips = stop_loss_pips * 3  # TP = 3x SL
+                    take_profit = take_profit_pips * 0.0001
+        else:
+            # Стандартный расчет, если риск-менеджер недоступен
+            # Аналогично с тейк-профитом, если нет в сигнале
+            if "take_profit" in signal and signal["take_profit"] > 0:
+                take_profit = signal["take_profit"]
+                take_profit_pips = int(take_profit / 0.0001)  # Перевод в пипсы
+            else:
+                take_profit_pips = stop_loss_pips * 3  # TP = 3x SL
+                take_profit = take_profit_pips * 0.0001
         
         # Рассчитываем размер лота, риск в валюте и скорректированный процент риска
         lot_size, risk_amount, adjusted_risk = calculate_lot_size(
@@ -523,6 +598,12 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
             "setup": setup_type,
             "ticket": order_info["ticket"]
         })
+        
+        # Регистрируем сделку в риск-менеджере, если он доступен
+        if risk_manager:
+            # Риск-менеджер ожидает отрицательное значение для риска, так как это потенциальный убыток
+            risk_manager.register_trade_result(0, -risk_amount, balance)
+            logger.info("Сделка зарегистрирована в риск-менеджере")
         
         # Логируем успешное открытие сделки
         logger.info(

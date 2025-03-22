@@ -26,6 +26,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 *.csv
+*.html
+risk_data/
 bot_logs.txt
 data_cache/
 logs/

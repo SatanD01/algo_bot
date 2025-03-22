@@ -281,10 +281,14 @@ def run_live_trading():
     logging.info(f"Бот запущен в режиме реальной торговли для {SYMBOL}")
     logging.info("=" * 50)
     
+    # Импортируем все необходимые модули
+    from trade_executor import execute_trade, get_trade_journal
+    from mt5_connector import get_account_info, get_open_positions, get_symbol_info
+    import traceback
+    
     # Инициализируем расширенный журнал сделок, если он доступен
     try:
         from trade_journal import TradeJournal
-        from trade_executor import get_trade_journal
         from config import TRADE_JOURNAL_ENABLED, TRADE_JOURNAL_AUTO_REPORT, TRADE_JOURNAL_DAYS_SUMMARY
         
         if TRADE_JOURNAL_ENABLED:
@@ -302,6 +306,52 @@ def run_live_trading():
         logger.info("Расширенный журнал сделок недоступен")
     except Exception as e:
         logger.warning(f"Ошибка при инициализации расширенного журнала сделок: {str(e)}")
+    
+    # Инициализируем риск-менеджер, если он доступен
+    risk_manager = None
+    try:
+        from risk_manager import get_risk_manager
+        from config import RISK_MANAGER_ENABLED, RISK_POSITION_SIZING_METHOD
+        
+        # Получаем информацию о счете для инициализации риск-менеджера
+        account_info = get_account_info()
+        if account_info and RISK_MANAGER_ENABLED:
+            risk_manager = get_risk_manager(
+                account_balance=account_info["balance"],
+                position_sizing_method=RISK_POSITION_SIZING_METHOD
+            )
+            logger.info("Риск-менеджер инициализирован")
+    except ImportError:
+        logger.info("Модуль риск-менеджера недоступен")
+    except Exception as e:
+        logger.warning(f"Ошибка при инициализации риск-менеджера: {str(e)}")
+    
+    # Инициализируем менеджер позиций для трейлинг-стопов, если он доступен
+    position_manager = None
+    try:
+        from position_manager import get_position_manager
+        
+        # Инициализируем с настройками из конфига (если они доступны)
+        try:
+            from config import (TRAILING_ACTIVATION, BREAKEVEN_ACTIVATION, 
+                              TRAILING_STEP, PARTIAL_CLOSE_PCT, USE_AUTO_CLOSE)
+            
+            position_manager = get_position_manager(
+                symbol=SYMBOL,
+                trailing_activation=TRAILING_ACTIVATION if 'TRAILING_ACTIVATION' in locals() else 0.5,
+                breakeven_activation=BREAKEVEN_ACTIVATION if 'BREAKEVEN_ACTIVATION' in locals() else 0.3,
+                trailing_step=TRAILING_STEP if 'TRAILING_STEP' in locals() else 0.1,
+                partial_close_pct=PARTIAL_CLOSE_PCT if 'PARTIAL_CLOSE_PCT' in locals() else 0.5,
+                use_auto_close=USE_AUTO_CLOSE if 'USE_AUTO_CLOSE' in locals() else True
+            )
+        except ImportError:
+            position_manager = get_position_manager(symbol=SYMBOL)
+        
+        logger.info("Менеджер позиций инициализирован")
+    except ImportError:
+        logger.info("Модуль менеджера позиций недоступен")
+    except Exception as e:
+        logger.warning(f"Ошибка при инициализации менеджера позиций: {str(e)}")
     
     # Получаем информацию о счете
     account_info = get_account_info()
@@ -328,6 +378,11 @@ def run_live_trading():
             if symbol not in open_positions_tracking:
                 open_positions_tracking[symbol] = []
             open_positions_tracking[symbol].append({'ticket': pos['ticket'], 'type': pos['type']})
+    
+    # Время последнего обновления трейлинг-стопов
+    last_trailing_update = time.time()
+    # Интервал обновления трейлинг-стопов (в секундах)
+    trailing_update_interval = 300  # 5 минут
     
     try:
         last_check_time = time.time()
@@ -358,6 +413,44 @@ def run_live_trading():
                     # Обновляем словарь отслеживания
                     open_positions_tracking = current_positions_dict
                 
+                # Проверяем необходимость обновления трейлинг-стопов
+                current_time = time.time()
+                if current_time - last_trailing_update >= trailing_update_interval:
+                    # Обновляем информацию о трейлинг-стопах, если есть открытые позиции
+                    if position_manager and any(open_positions_tracking.values()):
+                        try:
+                            # Обрабатываем открытые позиции
+                            result = position_manager.process_open_positions()
+                            
+                            # Логируем результат обработки позиций
+                            if 'actions' in result and any(result['actions'].values()):
+                                logger.info(f"Обработка позиций: {result['message']}")
+                                
+                                # Детальное логирование действий
+                                for action_type, actions in result['actions'].items():
+                                    if actions:
+                                        for action in actions:
+                                            if action_type == "trailing_stop_modified":
+                                                logger.info(f"Трейлинг-стоп: тикет {action['ticket']}, "
+                                                           f"новый SL: {action['new_sl']:.5f}, "
+                                                           f"прибыль: {action['profit_pips']:.1f} пипсов")
+                                            elif action_type == "moved_to_breakeven":
+                                                logger.info(f"Безубыток: тикет {action['ticket']}, "
+                                                           f"новый SL: {action['new_sl']:.5f}")
+                                            elif action_type == "partially_closed":
+                                                logger.info(f"Частичное закрытие: тикет {action['ticket']}, "
+                                                           f"объем: {action['volume_closed']} лот, "
+                                                           f"прибыль: {action['profit']:.2f}")
+                                            elif action_type == "auto_closed":
+                                                logger.info(f"Автозакрытие: тикет {action['ticket']}, "
+                                                           f"причина: {action['reason']}, "
+                                                           f"прибыль: {action['profit']:.2f}")
+                        except Exception as e:
+                            logger.error(f"Ошибка при обработке открытых позиций: {str(e)}")
+                    
+                    # Обновляем время последнего обновления трейлинг-стопов
+                    last_trailing_update = current_time
+                
                 # Получаем текущие открытые позиции для проверки перед выполнением торговой логики
                 current_positions = get_open_positions(symbol=SYMBOL)
                 
@@ -367,16 +460,31 @@ def run_live_trading():
                     # Извлекаем типы текущих открытых позиций для символа
                     current_types = [pos['type'] for pos in current_positions]
                     
-                    # Выполняем торговую логику
-                    # Если есть сигнал, он будет проверен на соответствие с текущими открытыми позициями
-                    signal = execute_trade()
+                    # Проверяем, разрешена ли торговля через риск-менеджер, если он доступен
+                    can_trade = True
+                    if risk_manager:
+                        can_trade, reason = risk_manager.can_trade()
+                        if not can_trade:
+                            logger.warning(f"Торговля остановлена риск-менеджером: {reason}")
                     
-                    # Если был открыт новый ордер, обновляем информацию в tracking
-                    if signal:
-                        symbol = signal['symbol']
-                        if symbol not in open_positions_tracking:
-                            open_positions_tracking[symbol] = []
-                        open_positions_tracking[symbol].append({'ticket': signal['ticket'], 'type': signal['type']})
+                    if can_trade:
+                        # Выполняем торговую логику
+                        # Если есть сигнал, он будет проверен на соответствие с текущими открытыми позициями
+                        signal = execute_trade()
+                        
+                        # Если был открыт новый ордер, обновляем информацию в tracking
+                        if signal:
+                            symbol = signal['symbol']
+                            if symbol not in open_positions_tracking:
+                                open_positions_tracking[symbol] = []
+                            open_positions_tracking[symbol].append({'ticket': signal['ticket'], 'type': signal['type']})
+                            
+                            # Обновляем информацию в риск-менеджере, если новая сделка
+                            if risk_manager:
+                                # Получаем обновленный баланс
+                                account_info = get_account_info()
+                                if account_info:
+                                    risk_manager.update_balance(account_info["balance"])
                 else:
                     logging.info(f"Достигнуто максимальное количество позиций для {SYMBOL}: {len(current_positions)}/{MAX_POSITIONS}")
                 
@@ -385,6 +493,14 @@ def run_live_trading():
                 if current_time - last_check_time >= 3600:  # 1 час
                     positions = get_open_positions()
                     logging.info(f"Бот активен. Открыто позиций: {len(positions)}")
+                    
+                    # Обновляем баланс в риск-менеджере
+                    if risk_manager:
+                        account_info = get_account_info()
+                        if account_info:
+                            risk_manager.update_balance(account_info["balance"])
+                            logging.info(f"Обновлен баланс риск-менеджера: {account_info['balance']}")
+                    
                     last_check_time = current_time
             else:
                 if cycle_count % 30 == 0:  # Логируем только периодически
@@ -422,6 +538,14 @@ def run_live_trading():
                         logging.info(f"Создан финальный отчет о торговле: {report_file}")
         except Exception as e:
             logging.warning(f"Не удалось создать финальный отчет: {str(e)}")
+        
+        # Экспортируем статистику риск-менеджера
+        try:
+            if risk_manager:
+                stats_file = risk_manager.export_statistics(format="json")
+                logging.info(f"Статистика риск-менеджера экспортирована в {stats_file}")
+        except Exception as e:
+            logging.warning(f"Ошибка при экспорте статистики риск-менеджера: {str(e)}")
     
     return True
 
@@ -513,6 +637,324 @@ def run_trade_journal_menu():
         logging.error(f"Ошибка при работе с журналом сделок: {str(e)}")
         logging.error(traceback.format_exc())
 
+def run_risk_manager_menu():
+    """Меню для работы с риск-менеджером"""
+    try:
+        from risk_manager import get_risk_manager, reset_risk_manager
+        from mt5_connector import connect_mt5, disconnect_mt5, get_account_info, get_symbol_info
+        
+        # Проверяем наличие журнала сделок для инициализации риск-менеджера с историей
+        try:
+            from trade_journal import TradeJournal
+            from trade_executor import get_trade_journal
+            from config import SYMBOL
+            
+            journal = get_trade_journal(SYMBOL, init_if_none=False)
+            if journal is not None:
+                # Получаем историю сделок для статистики риск-менеджера
+                closed_trades = journal.get_closed_trades()
+                if not closed_trades.empty:
+                    print(f"Найдено {len(closed_trades)} закрытых сделок в журнале")
+        except Exception as e:
+            print(f"Не удалось загрузить историю сделок: {e}")
+        
+        # Получаем информацию о счете для инициализации риск-менеджера
+        account_info = None
+        if connect_mt5():
+            try:
+                account_info = get_account_info()
+                if account_info:
+                    print(f"Информация о счете получена: Баланс {account_info['balance']} {account_info['currency']}")
+            except Exception as e:
+                print(f"Ошибка при получении информации о счете: {e}")
+            finally:
+                disconnect_mt5()
+        
+        # Инициализируем риск-менеджер
+        account_balance = account_info["balance"] if account_info else 10000
+        risk_manager = get_risk_manager(account_balance=account_balance)
+        
+        # Основной цикл меню
+        while True:
+            print("\n=== Меню управления рисками ===")
+            print("1. Показать текущую статистику")
+            print("2. Настроить параметры риск-менеджмента")
+            print("3. Рассчитать рекомендуемый размер позиции")
+            print("4. Экспортировать статистику")
+            print("5. Генерировать отчет по управлению рисками")
+            print("6. Сбросить риск-менеджер")
+            print("7. Вернуться в главное меню")
+            
+            choice = input("Выберите опцию (1-7): ").strip()
+            
+            if choice == "1":
+                # Показать текущую статистику
+                stats = risk_manager.get_statistics_summary()
+                
+                print("\n=== Текущая статистика ===")
+                print(f"Баланс счета: {stats['account_balance']:.2f}")
+                print(f"Пиковый баланс: {stats['peak_balance']:.2f}")
+                print(f"Текущая просадка: {stats['current_drawdown']:.2f}%")
+                print(f"Всего сделок: {stats['total_trades']}")
+                print(f"Винрейт: {stats['win_rate']:.2f}%")
+                print(f"Соотношение выигрыш/проигрыш: {stats['win_loss_ratio']:.2f}")
+                print(f"Используемый риск на сделку: {stats['risk_per_trade']:.2f}%")
+                print(f"Использовано дневного риска: {stats['daily_risk_used']:.2f}%")
+                
+                print("\n=== Рекомендации ===")
+                print(f"Рекомендуемый риск на сделку: {stats.get('recommended_risk', 'Н/Д')}%")
+                print(f"Рекомендуемое соотношение R:R: {stats.get('recommended_rr', 'Н/Д')}")
+                print(f"Рекомендуемый подход: {stats.get('recommended_approach', 'Н/Д')}")
+                print(f"Рекомендуемый метод расчета позиции: {stats.get('recommended_position_method', 'Н/Д')}")
+            
+            elif choice == "2":
+                # Настройка параметров
+                print("\n=== Настройка параметров риск-менеджмента ===")
+                
+                # Риск на сделку
+                risk_input = input(f"Риск на сделку (%) [{risk_manager.risk_per_trade*100:.2f}]: ").strip()
+                if risk_input:
+                    try:
+                        risk_percentage = float(risk_input) / 100.0
+                        risk_manager.risk_per_trade = max(0.001, min(0.1, risk_percentage))  # Ограничиваем от 0.1% до 10%
+                    except ValueError:
+                        print("Некорректное значение. Используется предыдущее значение.")
+                
+                # Макс. дневной риск
+                max_daily_risk_input = input(f"Максимальный дневной риск (%) [{risk_manager.max_daily_risk*100:.2f}]: ").strip()
+                if max_daily_risk_input:
+                    try:
+                        max_daily_risk = float(max_daily_risk_input) / 100.0
+                        risk_manager.max_daily_risk = max(0.01, min(0.2, max_daily_risk))  # Ограничиваем от 1% до 20%
+                    except ValueError:
+                        print("Некорректное значение. Используется предыдущее значение.")
+                
+                # Метод расчета позиции
+                print("\nМетоды расчета размера позиции:")
+                print("1. fixed_percent - Фиксированный процент (стандартный)")
+                print("2. kelly - Формула Келли (адаптивный на основе винрейта)")
+                print("3. optimal_f - Оптимальное F (для максимизации роста)")
+                print("4. martingale - Мартингейл (увеличение после убытка) - РИСКОВАННО!")
+                print("5. anti_martingale - Анти-мартингейл (увеличение после выигрыша)")
+                
+                method_input = input(f"Выберите метод [текущий: {risk_manager.position_sizing_method}]: ").strip()
+                if method_input:
+                    method_map = {
+                        "1": "fixed_percent",
+                        "2": "kelly",
+                        "3": "optimal_f",
+                        "4": "martingale",
+                        "5": "anti_martingale"
+                    }
+                    
+                    if method_input in method_map:
+                        new_method = method_map[method_input]
+                        
+                        # Предупреждение для мартингейла
+                        if new_method == "martingale":
+                            confirm = input("ВНИМАНИЕ: Мартингейл - высокорисковая стратегия! Подтвердите (y/n): ").lower()
+                            if confirm != 'y':
+                                print("Метод не изменен.")
+                                continue
+                        
+                        risk_manager.position_sizing_method = new_method
+                        print(f"Метод расчета позиции изменен на: {new_method}")
+                    else:
+                        print("Некорректный выбор метода.")
+                
+                print("\nПараметры риск-менеджмента обновлены")
+            
+            elif choice == "3":
+                # Расчет рекомендуемого размера позиции
+                print("\n=== Расчет размера позиции ===")
+                
+                # Получение параметров
+                symbol_input = input(f"Символ [{SYMBOL}]: ").strip() or SYMBOL
+                
+                stop_loss_input = input("Размер стоп-лосса (в пипсах): ").strip()
+                if not stop_loss_input or not stop_loss_input.isdigit():
+                    print("Необходимо указать стоп-лосс в пипсах.")
+                    continue
+                
+                stop_loss_pips = int(stop_loss_input)
+                
+                # Получаем информацию о символе
+                if connect_mt5():
+                    try:
+                        symbol_info = get_symbol_info(symbol_input)
+                        if not symbol_info:
+                            print(f"Не удалось получить информацию о символе {symbol_input}")
+                            disconnect_mt5()
+                            continue
+                        
+                        # Расчет размера позиции
+                        lot_size, risk_amount, risk_percent = risk_manager.calculate_position_size(
+                            stop_loss_pips, 0, symbol_info
+                        )
+                        
+                        print(f"\nРезультаты расчета для {symbol_input}:")
+                        print(f"Баланс: {risk_manager.account_balance:.2f}")
+                        print(f"Стоп-лосс: {stop_loss_pips} пипсов")
+                        print(f"Метод расчета: {risk_manager.position_sizing_method}")
+                        print(f"Риск: {risk_percent*100:.2f}% = ${risk_amount:.2f}")
+                        print(f"Рекомендуемый размер позиции: {lot_size:.2f} лот")
+                        
+                        # Рассчитываем тейк-профит
+                        recommendations = risk_manager.get_trade_recommendations()
+                        rr_ratio = recommendations.get("recommended_r_r_ratio", 2.0)
+                        tp_pips = risk_manager.calculate_take_profit(stop_loss_pips, rr_ratio)
+                        
+                        print(f"Рекомендуемый тейк-профит: {tp_pips} пипсов (R/R = {rr_ratio})")
+                        
+                    except Exception as e:
+                        print(f"Ошибка при расчете размера позиции: {e}")
+                    finally:
+                        disconnect_mt5()
+            
+            elif choice == "4":
+                # Экспорт статистики
+                print("\n=== Экспорт статистики ===")
+                print("Выберите формат:")
+                print("1. JSON")
+                print("2. CSV")
+                print("3. HTML")
+                
+                format_choice = input("Формат (1-3): ").strip()
+                
+                format_map = {"1": "json", "2": "csv", "3": "html"}
+                if format_choice in format_map:
+                    export_format = format_map[format_choice]
+                    try:
+                        file_path = risk_manager.export_statistics(format=export_format)
+                        print(f"Статистика экспортирована в файл: {file_path}")
+                        
+                        # Предлагаем открыть HTML-отчет, если он был сгенерирован
+                        if export_format == "html" and os.path.exists(file_path):
+                            open_file = input("Открыть отчет в браузере? (y/n): ").strip().lower()
+                            if open_file == 'y':
+                                import webbrowser
+                                webbrowser.open(f"file://{os.path.abspath(file_path)}")
+                    except Exception as e:
+                        print(f"Ошибка при экспорте статистики: {e}")
+                else:
+                    print("Некорректный выбор формата.")
+            
+            elif choice == "5":
+                # Генерация отчета по управлению рисками
+                print("\n=== Генерация отчета по управлению рисками ===")
+                
+                try:
+                    # Получаем данные для отчета
+                    stats = risk_manager.get_statistics_summary()
+                    equity_curve_data = risk_manager.get_equity_curve()
+                    
+                    # Генерируем HTML-отчет
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    report_file = os.path.join(risk_manager.data_dir, f"risk_report_{timestamp}.html")
+                    
+                    # Создаем HTML-содержимое (упрощенная версия)
+                    html_content = f"""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Отчет по управлению рисками - {timestamp}</title>
+                        <style>
+                            body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                            h1, h2, h3 {{ color: #333; }}
+                            table {{ border-collapse: collapse; width: 100%; margin-bottom: 20px; }}
+                            th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                            th {{ background-color: #f2f2f2; }}
+                            .positive {{ color: green; }}
+                            .negative {{ color: red; }}
+                            .warning {{ color: orange; }}
+                            .recommendation {{ background-color: #f8f9fa; padding: 15px; border-left: 4px solid #4285f4; margin-bottom: 20px; }}
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Отчет по управлению рисками</h1>
+                        <p>Дата создания: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+                        
+                        <h2>Текущее состояние</h2>
+                        <table>
+                            <tr><th>Показатель</th><th>Значение</th></tr>
+                            <tr><td>Баланс счета</td><td>{stats['account_balance']:.2f}</td></tr>
+                            <tr><td>Пиковый баланс</td><td>{stats['peak_balance']:.2f}</td></tr>
+                            <tr><td>Текущая просадка</td><td class="{'negative' if stats['current_drawdown'] > 10 else 'warning' if stats['current_drawdown'] > 5 else ''}">{stats['current_drawdown']:.2f}%</td></tr>
+                        </table>
+                        
+                        <h2>Статистика торговли</h2>
+                        <table>
+                            <tr><th>Показатель</th><th>Значение</th></tr>
+                            <tr><td>Всего сделок</td><td>{stats['total_trades']}</td></tr>
+                            <tr><td>Выигрышные сделки</td><td>{stats['winning_trades']}</td></tr>
+                            <tr><td>Проигрышные сделки</td><td>{stats['losing_trades']}</td></tr>
+                            <tr><td>Винрейт</td><td class="{'positive' if stats['win_rate'] > 50 else 'warning' if stats['win_rate'] > 40 else 'negative'}">{stats['win_rate']:.2f}%</td></tr>
+                            <tr><td>Соотношение выигрыш/проигрыш</td><td class="{'positive' if stats['win_loss_ratio'] > 1 else 'negative'}">{stats['win_loss_ratio']:.2f}</td></tr>
+                            <tr><td>Серия выигрышей</td><td>{stats['consecutive_wins']}</td></tr>
+                            <tr><td>Серия проигрышей</td><td>{stats['consecutive_losses']}</td></tr>
+                        </table>
+                        
+                        <h2>Параметры риска</h2>
+                        <table>
+                            <tr><th>Показатель</th><th>Значение</th></tr>
+                            <tr><td>Риск на сделку</td><td>{stats['risk_per_trade']:.2f}%</td></tr>
+                            <tr><td>Метод расчета позиции</td><td>{stats['position_sizing_method']}</td></tr>
+                            <tr><td>Использованный дневной риск</td><td>{stats['daily_risk_used']:.2f}%</td></tr>
+                            <tr><td>Лимит дневного риска</td><td>{stats['daily_risk_limit']:.2f}%</td></tr>
+                        </table>
+                        
+                        <h2>Рекомендации по управлению рисками</h2>
+                        <div class="recommendation">
+                            <h3>Ключевые рекомендации</h3>
+                            <p><strong>Риск на сделку:</strong> {stats.get('recommended_risk', '1.0')}%</p>
+                            <p><strong>Соотношение риск/доходность:</strong> {stats.get('recommended_rr', '2.0')}</p>
+                            <p><strong>Рекомендуемый подход:</strong> {stats.get('recommended_approach', 'Нет данных')}</p>
+                            <p><strong>Метод расчета позиции:</strong> {stats.get('recommended_position_method', 'fixed_percent')}</p>
+                        </div>
+                    </body>
+                    </html>
+                    """
+                    
+                    # Сохраняем отчет
+                    with open(report_file, 'w', encoding='utf-8') as f:
+                        f.write(html_content)
+                    
+                    print(f"Отчет сгенерирован и сохранен в: {report_file}")
+                    
+                    # Предлагаем открыть отчет
+                    open_report = input("Открыть отчет в браузере? (y/n): ").strip().lower()
+                    if open_report == 'y':
+                        import webbrowser
+                        webbrowser.open(f"file://{os.path.abspath(report_file)}")
+                
+                except Exception as e:
+                    print(f"Ошибка при генерации отчета: {e}")
+            
+            elif choice == "6":
+                # Сброс риск-менеджера
+                confirm = input("Вы уверены, что хотите сбросить риск-менеджер? Вся статистика будет потеряна. (y/n): ").strip().lower()
+                if confirm == 'y':
+                    reset_risk_manager()
+                    print("Риск-менеджер сброшен. Перезапустите меню для инициализации нового экземпляра.")
+                    break
+                else:
+                    print("Операция отменена.")
+            
+            elif choice == "7":
+                print("Возврат в главное меню")
+                break
+            
+            else:
+                print("Некорректный выбор. Пожалуйста, выберите 1-7.")
+    
+    except ImportError:
+        print("Модуль риск-менеджера недоступен. Пожалуйста, убедитесь, что файл risk_manager.py находится в директории проекта.")
+    
+    except Exception as e:
+        logging.error(f"Ошибка в меню риск-менеджера: {str(e)}")
+        logging.error(traceback.format_exc())
+        print(f"Произошла ошибка: {e}")
+
 def main():
     """Основной метод запуска бота"""
     try:
@@ -533,6 +975,27 @@ def main():
         except Exception as e:
             logging.warning(f"Не удалось инициализировать Telegram-нотификатор: {str(e)}")
         
+        # Инициализируем риск-менеджер, если доступен
+        try:
+            from risk_manager import get_risk_manager
+            # Проверяем, подключен ли MT5, чтобы получить информацию о балансе
+            if connect_mt5():
+                try:
+                    account_info = get_account_info()
+                    if account_info:
+                        balance = account_info["balance"]
+                        # Инициализируем риск-менеджер с текущим балансом
+                        risk_manager = get_risk_manager(account_balance=balance)
+                        logging.info(f"Риск-менеджер инициализирован с балансом {balance}")
+                except Exception as e:
+                    logging.warning(f"Ошибка при получении информации о счете: {str(e)}")
+                finally:
+                    disconnect_mt5()
+        except ImportError:
+            logging.debug("Модуль риск-менеджера недоступен")
+        except Exception as e:
+            logging.warning(f"Ошибка при инициализации риск-менеджера: {str(e)}")
+        
         # Запускаем соответствующий режим
         if MODE.lower() == "backtest":
             # Предлагаем выбрать между стандартным и оптимизированным бэктестом
@@ -542,7 +1005,8 @@ def main():
                     print("1. Стандартный бэктест")
                     print("2. Оптимизированный бэктест (быстрее)")
                     print("3. Визуализация результатов")
-                    print("4. Выход")
+                    print("4. Управление рисками и капиталом")
+                    print("5. Выход")
                     
                     try:
                         choice = input("Ваш выбор (1-5): ").strip()
@@ -554,10 +1018,12 @@ def main():
                         elif choice == "3":
                             run_visualization_menu()
                         elif choice == "4":
+                            run_risk_manager_menu()
+                        elif choice == "5":
                             print("Выход из программы")
                             break
                         else:
-                            print("Некорректный выбор. Пожалуйста, выберите 1-4.")
+                            print("Некорректный выбор. Пожалуйста, выберите 1-5.")
                     except Exception as e:
                         logging.error(f"Ошибка при выполнении действия: {str(e)}")
                         logging.error(traceback.format_exc())
@@ -571,20 +1037,23 @@ def main():
                 print("\nВыберите действие:")
                 print("1. Запустить торговлю")
                 print("2. Журнал сделок и статистика")
-                print("3. Выход")
+                print("3. Управление рисками и капиталом")
+                print("4. Выход")
                 
                 try:
-                    choice = input("Ваш выбор (1-3): ").strip()
+                    choice = input("Ваш выбор (1-4): ").strip()
                     
                     if choice == "1":
                         run_live_trading()
                     elif choice == "2":
                         run_trade_journal_menu()
                     elif choice == "3":
+                        run_risk_manager_menu()
+                    elif choice == "4":
                         print("Выход из программы")
                         break
                     else:
-                        print("Некорректный выбор. Пожалуйста, выберите 1-3.")
+                        print("Некорректный выбор. Пожалуйста, выберите 1-4.")
                 except Exception as e:
                     logging.error(f"Ошибка при выполнении действия: {str(e)}")
                     logging.error(traceback.format_exc())
