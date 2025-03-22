@@ -19,6 +19,9 @@ except ImportError:
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
 os.makedirs(logs_dir, exist_ok=True)
 
+# Настройка логгера
+logger = logging.getLogger(__name__)
+
 # Имя файла логов с датой
 current_date = datetime.now().strftime("%Y-%m-%d")
 log_filename = os.path.join(logs_dir, f"{current_date}_bot_log.txt")
@@ -278,6 +281,28 @@ def run_live_trading():
     logging.info(f"Бот запущен в режиме реальной торговли для {SYMBOL}")
     logging.info("=" * 50)
     
+    # Инициализируем расширенный журнал сделок, если он доступен
+    try:
+        from trade_journal import TradeJournal
+        from trade_executor import get_trade_journal
+        from config import TRADE_JOURNAL_ENABLED, TRADE_JOURNAL_AUTO_REPORT, TRADE_JOURNAL_DAYS_SUMMARY
+        
+        if TRADE_JOURNAL_ENABLED:
+            journal = get_trade_journal(SYMBOL)
+            if journal is not None:
+                # Генерируем отчет о предыдущей торговле, если включено автосоздание отчетов
+                if TRADE_JOURNAL_AUTO_REPORT:
+                    report_file = journal.generate_performance_report()
+                    if report_file:
+                        logger.info(f"Создан отчет о производительности: {report_file}")
+                
+                # Выводим краткую статистику за указанное количество дней
+                journal.print_summary(days=TRADE_JOURNAL_DAYS_SUMMARY)
+    except ImportError:
+        logger.info("Расширенный журнал сделок недоступен")
+    except Exception as e:
+        logger.warning(f"Ошибка при инициализации расширенного журнала сделок: {str(e)}")
+    
     # Получаем информацию о счете
     account_info = get_account_info()
     if account_info:
@@ -381,8 +406,112 @@ def run_live_trading():
         # Гарантированное отключение от MT5
         disconnect_mt5()
         logging.info("Соединение с MT5 закрыто")
+        
+        # Создаем финальный отчет по торговле, если включен журнал сделок
+        try:
+            from trade_journal import TradeJournal
+            from trade_executor import get_trade_journal
+            from config import TRADE_JOURNAL_ENABLED, TRADE_JOURNAL_AUTO_REPORT
+            
+            if TRADE_JOURNAL_ENABLED and TRADE_JOURNAL_AUTO_REPORT:
+                journal = get_trade_journal(SYMBOL, init_if_none=False)
+                if journal is not None:
+                    # Генерируем финальный отчет
+                    report_file = journal.generate_performance_report()
+                    if report_file:
+                        logging.info(f"Создан финальный отчет о торговле: {report_file}")
+        except Exception as e:
+            logging.warning(f"Не удалось создать финальный отчет: {str(e)}")
     
     return True
+
+def run_trade_journal_menu():
+    """Меню для работы с расширенным журналом сделок"""
+    try:
+        from trade_journal import TradeJournal
+        
+        # Инициализируем журнал сделок
+        journal = TradeJournal(SYMBOL)
+        
+        while True:
+            print("\n=== Меню журнала сделок ===")
+            print("1. Показать краткую статистику")
+            print("2. Создать подробный отчет")
+            print("3. Экспортировать данные в CSV")
+            print("4. Экспортировать данные в формат MT5")
+            print("5. Построить график накопленной прибыли")
+            print("6. Создать график выигрышей/проигрышей")
+            print("7. Вернуться в главное меню")
+            
+            choice = input("Выберите опцию (1-7): ").strip()
+            
+            if choice == "1":
+                days = input("За сколько последних дней показать статистику? (Enter для всего периода): ").strip()
+                if days and days.isdigit():
+                    journal.print_summary(days=int(days))
+                else:
+                    journal.print_summary()
+            
+            elif choice == "2":
+                print("Создание отчета...")
+                report_file = journal.generate_performance_report()
+                if report_file:
+                    print(f"Отчет создан и сохранен: {report_file}")
+                    
+                    # Спрашиваем, открыть ли отчет в браузере
+                    if input("Открыть отчет в браузере? (y/n): ").strip().lower() == 'y':
+                        import webbrowser
+                        webbrowser.open(f"file://{os.path.abspath(report_file)}")
+                else:
+                    print("Не удалось создать отчет")
+            
+            elif choice == "3":
+                print("Экспорт данных в CSV...")
+                export_file = journal.export_to_csv()
+                if export_file:
+                    print(f"Данные экспортированы в: {export_file}")
+                else:
+                    print("Не удалось экспортировать данные")
+            
+            elif choice == "4":
+                print("Экспорт данных в формат MT5...")
+                export_file = journal.export_to_mt5_format()
+                if export_file:
+                    print(f"Данные экспортированы в формат MT5: {export_file}")
+                else:
+                    print("Не удалось экспортировать данные")
+            
+            elif choice == "5":
+                print("Построение графика накопленной прибыли...")
+                chart_file = journal.plot_cumulative_profit(show=False)
+                if chart_file:
+                    print(f"График сохранен: {chart_file}")
+                else:
+                    print("Не удалось построить график")
+            
+            elif choice == "6":
+                print("Построение графика выигрышей/проигрышей...")
+                chart_file = journal.plot_wins_vs_losses(show=False)
+                if chart_file:
+                    print(f"График сохранен: {chart_file}")
+                else:
+                    print("Не удалось построить график")
+            
+            elif choice == "7":
+                print("Возврат в главное меню")
+                break
+            
+            else:
+                print("Некорректный выбор. Пожалуйста, выберите 1-7.")
+    
+    except ImportError:
+        print("Расширенный журнал сделок недоступен. Установите необходимые библиотеки:")
+        print("pip install pandas numpy matplotlib")
+    
+    except Exception as e:
+        print(f"Ошибка при работе с журналом сделок: {e}")
+        logging.error(f"Ошибка при работе с журналом сделок: {str(e)}")
+        logging.error(traceback.format_exc())
 
 def main():
     """Основной метод запуска бота"""
@@ -413,10 +542,11 @@ def main():
                     print("1. Стандартный бэктест")
                     print("2. Оптимизированный бэктест (быстрее)")
                     print("3. Визуализация результатов")
-                    print("4. Выход")
+                    print("4. Журнал сделок и статистика")
+                    print("5. Выход")
                     
                     try:
-                        choice = input("Ваш выбор (1-4): ").strip()
+                        choice = input("Ваш выбор (1-5): ").strip()
                         
                         if choice == "1":
                             run_backtest(optimized=False)
@@ -425,10 +555,12 @@ def main():
                         elif choice == "3":
                             run_visualization_menu()
                         elif choice == "4":
+                            run_trade_journal_menu()
+                        elif choice == "5":
                             print("Выход из программы")
                             break
                         else:
-                            print("Некорректный выбор. Пожалуйста, выберите 1-4.")
+                            print("Некорректный выбор. Пожалуйста, выберите 1-5.")
                     except Exception as e:
                         logging.error(f"Ошибка при выполнении действия: {str(e)}")
                         logging.error(traceback.format_exc())
@@ -438,7 +570,28 @@ def main():
                 run_backtest(optimized=False)
                 
         elif MODE.lower() == "live":
-            run_live_trading()
+            while True:
+                print("\nВыберите действие:")
+                print("1. Запустить торговлю")
+                print("2. Журнал сделок и статистика")
+                print("3. Выход")
+                
+                try:
+                    choice = input("Ваш выбор (1-3): ").strip()
+                    
+                    if choice == "1":
+                        run_live_trading()
+                    elif choice == "2":
+                        run_trade_journal_menu()
+                    elif choice == "3":
+                        print("Выход из программы")
+                        break
+                    else:
+                        print("Некорректный выбор. Пожалуйста, выберите 1-3.")
+                except Exception as e:
+                    logging.error(f"Ошибка при выполнении действия: {str(e)}")
+                    logging.error(traceback.format_exc())
+                    print(f"Произошла ошибка: {str(e)}")
         else:
             logging.error(f"Неизвестный режим работы: {MODE}")
             return False

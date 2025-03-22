@@ -22,6 +22,16 @@ logger = logging.getLogger(__name__)
 # Блокировка для потокобезопасности
 _trade_lock = threading.RLock()
 
+try:
+    from trade_journal import TradeJournal
+    TRADE_JOURNAL_AVAILABLE = True
+except ImportError:
+    TRADE_JOURNAL_AVAILABLE = False
+    logger.warning("Модуль trade_journal не найден. Расширенное логирование сделок отключено")
+
+# Глобальный экземпляр журнала сделок
+_trade_journal = None
+
 # Кэш для хранения информации о символах
 _symbol_info_cache = {}
 
@@ -33,6 +43,48 @@ _rate_limiter = {
     "today_date": None,        # Текущая дата для отслеживания риска
     "executed_trades": []      # История выполненных сделок за сессию
 }
+
+def get_trade_journal(symbol=SYMBOL, account_id=None, init_if_none=True):
+    """
+    Получение глобального экземпляра журнала сделок
+    
+    Параметры:
+    symbol (str): Торговый символ
+    account_id (int, optional): ID торгового счета
+    init_if_none (bool): Инициализировать журнал, если он не существует
+    
+    Возвращает:
+    TradeJournal: Экземпляр журнала сделок или None, если журнал недоступен
+    """
+    global _trade_journal
+    
+    if not TRADE_JOURNAL_AVAILABLE:
+        return None
+    
+    # Проверяем настройку в конфиге
+    try:
+        from config import TRADE_JOURNAL_ENABLED
+        if not TRADE_JOURNAL_ENABLED:
+            return None
+    except ImportError:
+        # Если настройка не определена, считаем что журнал включен
+        pass
+    
+    if _trade_journal is None and init_if_none:
+        try:
+            # Если account_id не указан, попробуем получить из MT5
+            if account_id is None:
+                account_info = get_account_info()
+                if account_info:
+                    account_id = account_info.get('login')
+            
+            _trade_journal = TradeJournal(symbol, account_id)
+            logger.info(f"Инициализирован журнал сделок для {symbol}")
+        except Exception as e:
+            logger.error(f"Ошибка при инициализации журнала сделок: {str(e)}")
+            return None
+    
+    return _trade_journal
 
 def retry_on_error(max_attempts=3, retry_delay=2):
     """
@@ -479,6 +531,33 @@ def execute_trade(from_signal=None, symbol=SYMBOL, risk_per_trade=None, check_co
             f"Дневной риск: {_rate_limiter['today_risk']*100:.2f}% из {MAX_DAILY_RISK*100:.2f}%"
         )
         
+        # Добавляем запись в журнал сделок, если он доступен
+        journal = get_trade_journal(symbol)
+        if journal is not None:
+            try:
+                # Создаем запись для журнала с дополнительной информацией
+                journal_entry = {
+                    'ticket': order_info["ticket"],
+                    'symbol': symbol,
+                    'order': order_type,
+                    'lot_size': lot_size,
+                    'entry_price': price,
+                    'entry_time': datetime.now(),
+                    'stop_loss': sl,
+                    'take_profit': tp,
+                    'risk_amount': risk_amount,
+                    'risk_percent': adjusted_risk * 100,
+                    'setup': setup_type,
+                    'tf': signal.get('tf') if isinstance(signal, dict) and 'tf' in signal else None,
+                    'comment': comment
+                }
+                
+                # Добавляем запись в журнал
+                journal.add_trade(journal_entry)
+                logger.info(f"Сделка добавлена в расширенный журнал (тикет: {order_info['ticket']})")
+            except Exception as e:
+                logger.warning(f"Ошибка при добавлении сделки в журнал: {str(e)}")
+
         # Возвращаем информацию о сделке
         trade_info = {
             "ticket": order_info["ticket"],

@@ -492,7 +492,31 @@ def close_position(ticket, deviation=10, retry_on_error=True):
             return False
         
         logger.info(f"Позиция {ticket} успешно закрыта")
-        
+
+        # Запись о закрытии сделки в журнал
+        try:
+            from trade_journal import TradeJournal
+            from trade_executor import get_trade_journal
+            
+            journal = get_trade_journal(position.symbol, init_if_none=False)
+            if journal is not None:
+                # Используем текущую цену как цену выхода
+                current_price = mt5.symbol_info_tick(position.symbol).bid if position.type == mt5.POSITION_TYPE_BUY else mt5.symbol_info_tick(position.symbol).ask
+                
+                journal.close_trade(
+                    ticket=ticket,
+                    exit_price=current_price,
+                    exit_time=datetime.now(),
+                    profit=position.profit,
+                    result="win" if position.profit > 0 else "loss",
+                    commission=position.commission,
+                    swap=position.swap,
+                    exit_reason="manual_close"
+                )
+                logger.info(f"Информация о закрытии сделки добавлена в расширенный журнал (тикет: {ticket})")
+        except Exception as e:
+            logger.warning(f"Ошибка при записи о закрытии сделки в журнал: {str(e)}")
+
         # Добавляем отправку уведомления в Telegram
         try:
             from telegram_notifier import get_notifier

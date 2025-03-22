@@ -80,6 +80,11 @@ LOG_FILE = "bot_logs.txt"  # Файл для логов
 LOG_LEVEL = "INFO"  # Уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 SAVE_CHARTS = True  # Сохранять ли графики с сигналами
 
+# === Журнал сделок ===
+TRADE_JOURNAL_ENABLED = True  # Включить расширенный журнал сделок
+TRADE_JOURNAL_AUTO_REPORT = True  # Автоматически создавать отчеты после сессии
+TRADE_JOURNAL_DAYS_SUMMARY = 7  # Количество дней для краткой статистики
+
 # === Telegram-уведомления ===
 TELEGRAM_ENABLED = True  # Включить уведомления в Telegram
 TELEGRAM_BOT_TOKEN = "8010458678:AAHGU6oqW8DbAQlhvqz-bRGr4hk023RUSi8"  # Токен вашего Telegram-бота
