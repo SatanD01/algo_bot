@@ -5,15 +5,27 @@ import sys
 import traceback
 import argparse
 from datetime import datetime, timedelta
-from config import CHECK_INTERVAL, MODE, SYMBOL, LOG_LEVEL, is_trading_allowed, MAX_POSITIONS
+from config import CHECK_INTERVAL, MODE, SYMBOL, LOG_LEVEL, is_trading_allowed, MAX_POSITIONS, RISK_PER_TRADE, MT5_LOGIN, MT5_SERVER, TRADE_JOURNAL_ENABLED
 from mt5_connector import connect_mt5, disconnect_mt5, get_account_info, get_open_positions
 from trade_executor import execute_trade
+from dotenv import load_dotenv
 from backtest import backtest
 try:
     from backtest_optimized import optimized_backtest
     OPTIMIZED_BACKTEST_AVAILABLE = True
 except ImportError:
     OPTIMIZED_BACKTEST_AVAILABLE = False
+
+# Получаем абсолютный путь к текущей директории
+base_dir = os.path.dirname(os.path.abspath(__file__))
+env_path = os.path.join(base_dir, '.env')
+
+# Загрузка переменных из .env файла с проверкой его существования
+if os.path.exists(env_path):
+    load_dotenv(dotenv_path=env_path, override=True)
+    print(f"Загружены настройки из {env_path}")
+else:
+    print(f"ВНИМАНИЕ: Файл .env не найден в {base_dir}. Используются значения по умолчанию.")
 
 # Директория для логов
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
@@ -958,45 +970,19 @@ def run_risk_manager_menu():
 def main():
     """Основной метод запуска бота"""
     try:
-        # Выводим информацию о запуске
-        logging.info(f"Запуск AlgoTrade бота (Версия 1.0, Режим: {MODE})")
-
-        # Инициализируем Telegram-нотификатор, если включен
-        try:
-            from telegram_notifier import initialize_telegram_notifier
-            from config import TELEGRAM_ENABLED, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+        # Выводим текущие значения для отладки
+        mode_env = os.environ.get('MODE', 'не задано')
+        mode_config = MODE
+        print(f"Значение MODE из системы: {mode_env}")
+        print(f"Значение MODE из config.py: {mode_config}")
+        
+        # Проверка режима работы из конфига
+        print(f"\nТЕКУЩИЙ РЕЖИМ РАБОТЫ: {MODE}")
+        if MODE.lower() not in ["backtest", "live"]:
+            print(f"ОШИБКА: Неизвестный режим работы '{MODE}'. Доступны только 'backtest' или 'live'.")
+            return False
             
-            if TELEGRAM_ENABLED:
-                notifier = initialize_telegram_notifier(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
-                if notifier.enabled:
-                    logging.info("Telegram-уведомления включены")
-                else:
-                    logging.warning("Telegram-уведомления отключены: не указан токен бота или ID чата")
-        except Exception as e:
-            logging.warning(f"Не удалось инициализировать Telegram-нотификатор: {str(e)}")
-        
-        # Инициализируем риск-менеджер, если доступен
-        try:
-            from risk_manager import get_risk_manager
-            # Проверяем, подключен ли MT5, чтобы получить информацию о балансе
-            if connect_mt5():
-                try:
-                    account_info = get_account_info()
-                    if account_info:
-                        balance = account_info["balance"]
-                        # Инициализируем риск-менеджер с текущим балансом
-                        risk_manager = get_risk_manager(account_balance=balance)
-                        logging.info(f"Риск-менеджер инициализирован с балансом {balance}")
-                except Exception as e:
-                    logging.warning(f"Ошибка при получении информации о счете: {str(e)}")
-                finally:
-                    disconnect_mt5()
-        except ImportError:
-            logging.debug("Модуль риск-менеджера недоступен")
-        except Exception as e:
-            logging.warning(f"Ошибка при инициализации риск-менеджера: {str(e)}")
-        
-        # Запускаем соответствующий режим
+        # Добавляем явное меню независимо от режима
         if MODE.lower() == "backtest":
             # Предлагаем выбрать между стандартным и оптимизированным бэктестом
             if OPTIMIZED_BACKTEST_AVAILABLE:
@@ -1070,4 +1056,14 @@ def main():
         return False
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='AlgoTrade Bot')
+    parser.add_argument('--mode', choices=['live', 'backtest'], 
+                        help='Режим работы бота (live или backtest)')
+    args = parser.parse_args()
+    
+    # Если указан аргумент --mode, переопределяем настройку из конфига
+    if args.mode:
+        os.environ['MODE'] = args.mode
+        print(f"Режим работы установлен через командную строку: {args.mode}")
+    
     main()

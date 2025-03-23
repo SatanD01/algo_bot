@@ -8,3 +8,4 @@ dash-bootstrap-components
 PyQt5
 pyqtgraph
 tqdm
+python-dotenv
