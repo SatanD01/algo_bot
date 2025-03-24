@@ -120,31 +120,8 @@ class TradeJournal:
         Параметры:
         trade_data (dict): Данные о сделке
         
-        Пример:
-        {
-            'ticket': 123456,
-            'symbol': 'EURUSD',
-            'order': 'buy',  # или 'sell'
-            'lot_size': 0.1,
-            'entry_price': 1.12345,
-            'exit_price': 1.12545,
-            'entry_time': datetime(2023, 1, 1, 10, 0, 0),
-            'exit_time': datetime(2023, 1, 1, 14, 30, 0),
-            'stop_loss': 1.12245,
-            'take_profit': 1.12645,
-            'result': 'win',  # или 'loss'
-            'profit': 20.0,
-            'commission': -2.0,
-            'swap': -0.5,
-            'setup': 'BreakerBlock',
-            'tf': 'H1',
-            'comment': 'Strong momentum after retest',
-            'tags': ['trend_following', 'high_volume'],
-            'entry_reason': 'Break of key level with momentum',
-            'exit_reason': 'Take profit hit',
-            'market_condition': 'Trending',
-            'screenshot_path': '/path/to/screenshot.png'
-        }
+        Возвращает:
+        bool: True в случае успешного добавления, иначе False
         """
         # Проверка наличия обязательных полей
         required_fields = ['ticket', 'symbol', 'order', 'entry_price', 'entry_time']
@@ -210,8 +187,18 @@ class TradeJournal:
                 # Создаем новый DataFrame с одной записью
                 new_trade_df = pd.DataFrame([trade_data])
                 
-                # Объединяем с существующими данными
-                self.trades_df = pd.concat([self.trades_df, new_trade_df], ignore_index=True)
+                # Исправление предупреждения: проверка на наличие данных перед конкатенацией
+                if self.trades_df.empty:
+                    # Если основной DataFrame пустой, просто присваиваем новый
+                    self.trades_df = new_trade_df.copy()
+                else:
+                    # Объединяем с существующими данными, убедившись, что в новом DataFrame есть все столбцы из основного
+                    for col in self.trades_df.columns:
+                        if col not in new_trade_df.columns:
+                            new_trade_df[col] = None
+                    
+                    # Теперь выполняем конкатенацию
+                    self.trades_df = pd.concat([self.trades_df, new_trade_df], ignore_index=True)
                 
                 logger.info(f"Добавлена новая сделка: {trade_data['symbol']} {trade_data['order']} ({trade_data['ticket']})")
         else:

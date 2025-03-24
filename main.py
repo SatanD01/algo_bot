@@ -463,15 +463,19 @@ def run_live_trading():
                     # Обновляем время последнего обновления трейлинг-стопов
                     last_trailing_update = current_time
                 
-                # Получаем текущие открытые позиции для проверки перед выполнением торговой логики
+                # Получаем текущие открытые позиции для текущего символа
                 current_positions = get_open_positions(symbol=SYMBOL)
+                
+                # ВАЖНОЕ ИЗМЕНЕНИЕ: Проверяем наличие открытых позиций для символа
+                symbol_has_open_position = False
+                for pos in current_positions:
+                    if pos['symbol'] == SYMBOL:
+                        symbol_has_open_position = True
+                        break
                 
                 # Проверяем, есть ли уже открытые позиции для текущего символа
                 # и допустимо ли открытие новых позиций
-                if len(current_positions) < MAX_POSITIONS:
-                    # Извлекаем типы текущих открытых позиций для символа
-                    current_types = [pos['type'] for pos in current_positions]
-                    
+                if len(current_positions) < MAX_POSITIONS and not symbol_has_open_position:
                     # Проверяем, разрешена ли торговля через риск-менеджер, если он доступен
                     can_trade = True
                     if risk_manager:
@@ -498,7 +502,10 @@ def run_live_trading():
                                 if account_info:
                                     risk_manager.update_balance(account_info["balance"])
                 else:
-                    logging.info(f"Достигнуто максимальное количество позиций для {SYMBOL}: {len(current_positions)}/{MAX_POSITIONS}")
+                    if symbol_has_open_position:
+                        logging.info(f"Уже есть открытая позиция для {SYMBOL}, ждем ее закрытия перед открытием новой")
+                    else:
+                        logging.info(f"Достигнуто максимальное количество позиций: {len(current_positions)}/{MAX_POSITIONS}")
                 
                 # Логируем активность каждый час
                 current_time = time.time()

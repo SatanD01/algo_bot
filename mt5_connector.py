@@ -358,6 +358,13 @@ def get_open_positions(symbol=None, magic=None, retry_on_error=True):
         # Преобразуем позиции в список словарей для удобства
         positions_list = []
         for position in positions:
+            # Получаем информацию о символе для доступа к point
+            symbol_info = mt5.symbol_info(position.symbol)
+            point_value = 0.0001  # Стандартное значение по умолчанию для forex
+            
+            if symbol_info is not None:
+                point_value = symbol_info.point
+            
             pos_info = {
                 "ticket": position.ticket,
                 "symbol": position.symbol,
@@ -368,20 +375,20 @@ def get_open_positions(symbol=None, magic=None, retry_on_error=True):
                 "sl": position.sl,
                 "tp": position.tp,
                 "profit": position.profit,
-                "swap": position.swap,
-                "commission": position.commission,
+                "swap": getattr(position, "swap", 0),  # Безопасное получение атрибута
+                "commission": getattr(position, "commission", 0),  # Безопасное получение атрибута
                 "open_time": datetime.fromtimestamp(position.time),
                 "magic": position.magic,
-                "comment": position.comment,
-                "identifier": position.identifier,
-                "reason": position.reason
+                "comment": getattr(position, "comment", ""),  # Безопасное получение атрибута
+                "identifier": getattr(position, "identifier", 0),  # Безопасное получение атрибута
+                "reason": getattr(position, "reason", 0)  # Безопасное получение атрибута
             }
             
             # Добавляем расчет прибыли в пунктах
             if pos_info["type"] == "buy":
-                pos_info["profit_points"] = int((position.price_current - position.price_open) / position.point)
+                pos_info["profit_points"] = int((position.price_current - position.price_open) / point_value)
             else:
-                pos_info["profit_points"] = int((position.price_open - position.price_current) / position.point)
+                pos_info["profit_points"] = int((position.price_open - position.price_current) / point_value)
             
             positions_list.append(pos_info)
         
@@ -843,7 +850,7 @@ def open_order(symbol, order_type, volume, price=None, sl=None, tp=None, deviati
         # Проверяем и ограничиваем длину комментария (MT5 имеет ограничение на длину комментария)
         if comment:
             # Ограничиваем комментарий 31 символом для безопасности
-            comment = comment[:31]
+            comment = comment[:15]
         else:
             # Используем стандартный комментарий, если не указан
             comment = f"{order_type[:3]}-{symbol}"
@@ -1196,19 +1203,21 @@ def get_symbol_info(symbol):
             info["spread_current"] = tick.ask - tick.bid
             info["time"] = datetime.fromtimestamp(tick.time)
         
-        # Получаем расписание торговых сессий
+        # Пытаемся получить информацию о расписании торговых сессий, если функция доступна
         try:
-            sessions = mt5.symbol_info_session(symbol, mt5.SYMBOL_SESSION_TRADE)
-            if sessions is not None and len(sessions) > 0:
-                info["sessions"] = []
-                for session in sessions:
-                    start_time = datetime.fromtimestamp(session[0])
-                    end_time = datetime.fromtimestamp(session[1])
-                    info["sessions"].append({
-                        "start": start_time.strftime("%H:%M"),
-                        "end": end_time.strftime("%H:%M"),
-                        "day": start_time.strftime("%A")
-                    })
+            # Проверяем наличие функции symbol_info_session в API
+            if hasattr(mt5, 'symbol_info_session'):
+                sessions = mt5.symbol_info_session(symbol, mt5.SYMBOL_SESSION_TRADE)
+                if sessions is not None and len(sessions) > 0:
+                    info["sessions"] = []
+                    for session in sessions:
+                        start_time = datetime.fromtimestamp(session[0])
+                        end_time = datetime.fromtimestamp(session[1])
+                        info["sessions"].append({
+                            "start": start_time.strftime("%H:%M"),
+                            "end": end_time.strftime("%H:%M"),
+                            "day": start_time.strftime("%A")
+                        })
         except Exception as e:
             logger.warning(f"Не удалось получить информацию о сессиях для {symbol}: {str(e)}")
         
