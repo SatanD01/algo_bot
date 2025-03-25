@@ -25,14 +25,84 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Данные и логи
 *.csv
 *.html
+*.json
+*.txt
+*.xlsx
+*.xls
+*.pickle
+*.pkl
+*.h5
+*.npy
+*.npz
 risk_data/
-bot_logs.txt
-data_cache/
 logs/
 trade_journal/
+trade_journal/*
+trade_journal/**/*
 backtest_results/
+data_cache/
+
+# Детальные исключения для trade_journal
+trade_journal/*.csv
+trade_journal/*.json
+trade_journal/*.xlsx
+trade_journal/*.txt
+trade_journal/*.html
+trade_journal/*.png
+trade_journal/*.jpg
+trade_journal/*.jpeg
+trade_journal/*.gif
+trade_journal/*.pdf
+trade_journal/**/*.csv
+trade_journal/**/*.json
+trade_journal/**/*.xlsx
+trade_journal/**/*.txt
+trade_journal/**/*.html
+trade_journal/**/*.png
+trade_journal/**/*.jpg
+trade_journal/**/*.jpeg
+trade_journal/**/*.gif
+trade_journal/**/*.pdf
+trade_journal/reports/
+trade_journal/data/
+trade_journal/exports/
+trade_journal/backup/
+
+# Исключения - файлы, которые нужно сохранить в репозитории
+!requirements.txt
+!README.txt
+!README.md
+!.env.example
+!LICENSE.txt
+!config.json.example
+
+# Резервные копии и временные файлы
+*.bak
+*.tmp
+*.swp
+*~
+
+# Файлы MT5
+*.ex4
+*.ex5
+*.mq4
+*.mq5
+*.mqh
+*.set
+
+# OS-специфичные файлы
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.directory
+*.lnk
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -135,7 +205,7 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
+# Виртуальное окружение и настройки разработки
 .env
 .venv
 env/
@@ -143,6 +213,27 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Интегрированные среды разработки (IDE)
+.idea/
+.vscode/
+*.code-workspace
+.vs/
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+.komodotools/
+.atom/
+.eclipse/
+.settings/
+.project
+.classpath
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.user
 
 # Spyder project settings
 .spyderproject

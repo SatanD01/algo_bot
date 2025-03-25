@@ -7,7 +7,8 @@ from datetime import datetime, timedelta
 from functools import wraps
 from config import (
     SYMBOL, RISK_PER_TRADE, MIN_STOPLOSS_PIPS, MAX_SPREAD, 
-    MAX_POSITIONS, MAX_DAILY_RISK, TIMEFRAMES, STRATEGY_SETTINGS
+    MAX_POSITIONS, MAX_DAILY_RISK, TIMEFRAMES, STRATEGY_SETTINGS,
+    TRADING_START_HOUR, TRADING_END_HOUR
 )
 from mt5_connector import (
     connect_mt5, disconnect_mt5, get_account_info, 
@@ -378,9 +379,9 @@ def check_trade_conditions(symbol=SYMBOL, max_spread_multiplier=1.5):
     if now.weekday() >= 5:  # Суббота и воскресенье
         return False, f"Нерабочий день недели ({now.strftime('%A')})"
     
-    # Проверка времени торговой сессии (исключаем ночное время)
-    if now.hour < 7 or now.hour >= 21:  # До 7:00 и после 21:00
-        return False, f"Нерабочее время ({now.strftime('%H:%M')})"
+    # Проверка времени торговой сессии используя настройки из конфига
+    if now.hour < TRADING_START_HOUR or now.hour >= TRADING_END_HOUR:
+        return False, f"Нерабочее время ({now.strftime('%H:%M')}), торговля разрешена с {TRADING_START_HOUR}:00 до {TRADING_END_HOUR}:00"
     
     # Все проверки пройдены
     return True, None
