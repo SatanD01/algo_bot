@@ -951,8 +951,29 @@ def find_trade_signal(df, min_signal_strength=0.7):
     return None
 
 if __name__ == "__main__":
-    # Настраиваем логирование для консоли при запуске скрипта напрямую
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+    # Импорт настроек логирования из конфигурации
+    from config import LOGS_DIR, LOG_LEVEL, LOG_FILE_FORMAT
+    
+    # Создаем директорию для логов, если она не существует
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    
+    # Имя файла логов с датой и временем
+    current_time = datetime.now().strftime(LOG_FILE_FORMAT.replace("bot_log", "strategy_log"))
+    log_file_path = os.path.join(LOGS_DIR, current_time)
+    
+    # Настройка уровня логирования
+    log_level = getattr(logging, LOG_LEVEL.upper() if hasattr(logging, LOG_LEVEL.upper()) else "INFO")
+    
+    # Настраиваем логирование при запуске скрипта напрямую
+    logging.basicConfig(
+        level=log_level,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        handlers=[
+            logging.FileHandler(log_file_path, encoding="utf-8"),
+            logging.StreamHandler()
+        ]
+    )
     
     if is_connected() or connect_mt5():
         df = get_historical_data(SYMBOL, timeframe="M15")

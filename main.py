@@ -27,16 +27,16 @@ if os.path.exists(env_path):
 else:
     print(f"ВНИМАНИЕ: Файл .env не найден в {base_dir}. Используются значения по умолчанию.")
 
-# Директория для логов
-logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
-os.makedirs(logs_dir, exist_ok=True)
+# Директория для логов из конфигурации
+from config import LOGS_DIR, LOG_LEVEL, LOG_FILE_FORMAT
+os.makedirs(LOGS_DIR, exist_ok=True)
 
 # Настройка логгера
 logger = logging.getLogger(__name__)
 
-# Имя файла логов с датой
-current_date = datetime.now().strftime("%Y-%m-%d")
-log_filename = os.path.join(logs_dir, f"{current_date}_bot_log.txt")
+# Имя файла логов с датой и временем
+current_time = datetime.now().strftime(LOG_FILE_FORMAT)
+log_filename = os.path.join(LOGS_DIR, current_time)
 
 # Настройка уровня логирования из конфигурации
 log_level = getattr(logging, LOG_LEVEL.upper() if hasattr(logging, LOG_LEVEL.upper()) else "INFO")

@@ -15,7 +15,20 @@ results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backtest
 os.makedirs(results_dir, exist_ok=True)
 
 # Настроим логирование
-logging.basicConfig(filename="bot_logs.txt", level=logging.INFO, encoding="utf-8",
+from config import LOGS_DIR, LOG_LEVEL, LOG_FILE_FORMAT
+
+# Создаем директорию для логов, если она не существует
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+# Получаем текущее время для имени файла
+current_time = datetime.now().strftime(LOG_FILE_FORMAT)
+log_file_path = os.path.join(LOGS_DIR, current_time)
+
+# Настройка уровня логирования
+log_level = getattr(logging, LOG_LEVEL.upper() if hasattr(logging, LOG_LEVEL.upper()) else "INFO")
+
+# Настраиваем логирование
+logging.basicConfig(filename=log_file_path, level=log_level, encoding="utf-8",
                     format="%(asctime)s [%(levelname)s] %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S")
 

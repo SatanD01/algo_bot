@@ -38,16 +38,18 @@ except ImportError as e:
 # Глобальная переменная для управления частотой обновления визуализации
 VISUALIZATION_UPDATE_FREQUENCY = 10  # Обновление каждые 10 шагов
 
-# Директория для логов
-log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
-os.makedirs(log_dir, exist_ok=True)
+# Импорт настроек логирования из конфигурации
+from config import LOGS_DIR, LOG_LEVEL, LOG_FILE_FORMAT
 
-# Имя файла логов с датой
-current_date = datetime.now().strftime("%Y-%m-%d")
-log_filename = os.path.join(log_dir, f"{current_date}_backtest_log.txt")
+# Убеждаемся, что директория для логов существует
+os.makedirs(LOGS_DIR, exist_ok=True)
 
-# Настройка уровня логирования
-log_level = logging.INFO
+# Имя файла логов с датой и временем
+current_time = datetime.now().strftime(LOG_FILE_FORMAT.replace("bot_log", "backtest_log"))
+log_filename = os.path.join(LOGS_DIR, current_time)
+
+# Настройка уровня логирования из конфигурации
+log_level = getattr(logging, LOG_LEVEL.upper() if hasattr(logging, LOG_LEVEL.upper()) else "INFO")
 
 # Настраиваем логирование в файл и в консоль
 logging.basicConfig(

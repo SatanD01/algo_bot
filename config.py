@@ -145,7 +145,10 @@ VISUALIZATION_DPI = int(os.getenv("VIS_DPI", "150"))  # Разрешение г�
 VISUALIZATION_OUTPUT_DIR = os.getenv("VIS_OUTPUT_DIR", "backtest_results")  # Директория для результатов бэктеста
 
 # === Логирование ===
-LOG_FILE = os.getenv("LOG_FILE", "bot_logs.txt")  # Файл для логов
+# Директория для логов
+LOGS_DIR = os.getenv("LOGS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs"))
+# Формат имени файла логов с датой и временем
+LOG_FILE_FORMAT = os.getenv("LOG_FILE_FORMAT", "%Y-%m-%d_%H-%M-%S_bot_log.txt")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")  # Уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 SAVE_CHARTS = os.getenv("SAVE_CHARTS", "True").lower() == "true"  # Сохранять ли графики с сигналами
 

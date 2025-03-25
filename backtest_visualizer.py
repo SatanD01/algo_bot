@@ -13,11 +13,29 @@ import webbrowser
 import threading
 import gc
 
+# Импорт настроек логирования из конфигурации
+from config import LOGS_DIR, LOG_LEVEL, LOG_FILE_FORMAT
+
 # Настройка логирования
+# Создаем директорию для логов, если она не существует
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+# Имя файла логов с датой и временем
+current_time = datetime.now().strftime(LOG_FILE_FORMAT.replace("bot_log", "visualizer_log"))
+log_file_path = os.path.join(LOGS_DIR, current_time)
+
+# Настройка уровня логирования
+log_level = getattr(logging, LOG_LEVEL.upper() if hasattr(logging, LOG_LEVEL.upper()) else "INFO")
+
+# Настройка логирования в файл и консоль
 logging.basicConfig(
-    level=logging.INFO,
+    level=log_level,
     format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[
+        logging.FileHandler(log_file_path, encoding="utf-8"),
+        logging.StreamHandler()
+    ]
 )
 logger = logging.getLogger(__name__)
 
